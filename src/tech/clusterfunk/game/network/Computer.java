@@ -102,7 +102,7 @@ public class Computer {
 
     @Override
     public String toString() {
-        return "OS: " + os.getName() + ", Address:" + ip + ", User:" + user + ", Access Level:" + accessLevel + ", " +
-                "cryptoCoins:" + crytoCoins;
+        return "os: " + os.getName() + ", ip: " + ip + ", user: " + user +
+                ", access level: " + accessLevel + ", cryptoCoins: " + crytoCoins;
     }
 }
