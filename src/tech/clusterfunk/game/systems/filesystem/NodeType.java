@@ -1,5 +1,5 @@
 package tech.clusterfunk.game.systems.filesystem;
 
-public enum FileType {
+public enum NodeType {
     FILE, DIRECTORY;
 }
