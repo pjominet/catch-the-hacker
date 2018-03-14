@@ -1,45 +1,50 @@
 {
   "os": "DOORS",
   "filesystem": {
-    "path": "X:/",
+    "path": "X:",
     "type": "d",
     "children": [
       {
-        "path": "Program Files/",
+        "path": "X:/Program Files",
         "type": "d",
         "children": []
       },
       {
-        "path": "Program Data/",
+        "path": "X:/Program Data",
         "type": "d",
         "children": [
           {
-            "path": "Logs/",
+            "path": "X:/Program Data/Logging",
             "type": "d",
             "children": []
           }
         ]
       },
       {
-        "path": "Users/",
+        "path": "X:/Users",
         "type": "d",
         "children": [
           {
-            "path": "UserXYZ/",
+            "path": "X:/Users/UserXYZ",
             "type": "d",
             "children": [
               {
-                "path": "Desktop/",
+                "path": "X:/Users/UserXYZ/Desktop",
                 "type": "d",
                 "children": []
               },
               {
-                "path": "Documents/",
+                "path": "X:/Users/UserXYZ/Documents",
                 "type": "d",
                 "children": []
               },
               {
-                "path": "Pictures/",
+                "path": "X:/Users/UserXYZ/Pictures",
+                "type": "d",
+                "children": []
+              },
+              {
+                "path": "X:/Users/UserXYZ/AppData",
                 "type": "d",
                 "children": []
               }
@@ -48,7 +53,7 @@
         ]
       },
       {
-        "path": "Doors",
+        "path": "X:/Doors",
         "children": []
       }
     ]

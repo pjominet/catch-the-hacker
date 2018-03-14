@@ -5,41 +5,46 @@
     "type": "d",
     "children": [
       {
-        "path": "bin/",
+        "path": "/bin",
         "type": "d",
         "children": []
       },
       {
-        "path": "var/",
+        "path": "/var",
         "type": "d",
         "children": [
           {
-            "path": "Logs/",
+            "path": "/var/logs",
             "type": "d",
             "children": []
           }
         ]
       },
       {
-        "path": "home/",
+        "path": "/home",
         "type": "d",
         "children": [
           {
-            "path": "UserXYZ/",
+            "path": "/home/UserXYZ",
             "type": "d",
             "children": [
               {
-                "path": "Desktop/",
+                "path": "/home/UserXYZ/desktop",
                 "type": "d",
                 "children": []
               },
               {
-                "path": "Documents/",
+                "path": "/home/UserXYZ/documents",
                 "type": "d",
                 "children": []
               },
               {
-                "path": "Pictures/",
+                "path": "/home/UserXYZ/pictures",
+                "type": "d",
+                "children": []
+              },
+              {
+                "path": "/home/UserXYZ/applications",
                 "type": "d",
                 "children": []
               }
@@ -48,7 +53,7 @@
         ]
       },
       {
-        "path": "etc",
+        "path": "/etc",
         "type": "d",
         "children": []
       }
