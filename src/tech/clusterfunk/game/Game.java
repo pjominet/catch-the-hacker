@@ -12,8 +12,7 @@ public class Game {
     private Player player;
     private Blackhat blackhat;
     private Network network;
-    private ColoredPrinter printer = new ColoredPrinter.Builder(1, false)
-            .foreground(FColor.WHITE).background(BColor.BLACK).build();
+    private ColoredPrinter printer = new ColoredPrinter.Builder(1, false).build();
 
     public Game() {
         System.out.println("Setting up game:");
@@ -54,7 +53,7 @@ public class Game {
         printer.clear();
     }
 
-    public void start() {
+    public void run() {
         printer.println("=== Catch The Hacker ===\n", Attribute.BOLD, FColor.GREEN, BColor.BLACK);
 
         printer.clear();

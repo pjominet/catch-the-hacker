@@ -15,9 +15,11 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static tech.clusterfunk.Main.CONFIG_ROOT;
+
 public class IOHandler {
     public static List<Command> loadCommandSet(String os) {
-        String config = "src/tech/clusterfunk/configs/" + os + "_CMD.cnf";
+        String config = CONFIG_ROOT + os + "_CMD.cnf";
         String pattern = "([a-z]+):(.*):(.+)";
         List<Command>commandSet = new ArrayList<>();
         try (BufferedReader reader = Files.newBufferedReader(Paths.get(config),
@@ -34,13 +36,14 @@ public class IOHandler {
             reader.close();
         } catch (IOException e) {
             //e.printStackTrace();
-            System.err.println("FileSystem not found: " + config);
+            System.err.println("File not found: " + config);
+            System.exit(1);
         }
         return commandSet;
     }
 
     public static List<Command> loadDefaultCommands() {
-        String config = "src/tech/clusterfunk/configs/PLAYER_CMD.cnf";
+        String config = CONFIG_ROOT + "PLAYER_CMD.cnf";
         String pattern = "([A-Z]+):(.*)";
         List<Command> defaultCommands = new ArrayList<>();
         try (BufferedReader reader = Files.newBufferedReader(Paths.get(config),
@@ -65,7 +68,8 @@ public class IOHandler {
             reader.close();
         } catch (IOException e) {
             //e.printStackTrace();
-            System.err.println("FileSystem not found: " + config);
+            System.err.println("File not found: " + config);
+            System.exit(1);
         }
         return defaultCommands;
     }
@@ -84,13 +88,14 @@ public class IOHandler {
                 }
             } catch (IOException e) {
                 if (++tries == 3) {
-                    System.err.println("FileSystem already exists, no writing occurred");
-                    break;
+                    System.err.println("File already exists, no writing occurred");
+                    System.exit(1);
                 } else {
                     try {
                         Files.delete(Paths.get(path));
                     } catch (IOException e1) {
                         e1.printStackTrace();
+                        System.exit(1);
                     }
                 }
             }

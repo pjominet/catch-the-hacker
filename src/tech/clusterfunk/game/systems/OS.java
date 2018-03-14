@@ -14,13 +14,15 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
+import static tech.clusterfunk.Main.CONFIG_ROOT;
+
 public class OS {
     private String name;
     private List<Command> commandSet;
-    private Node filesystem;
+    private Node fileSystem;
 
     private Node loadFS() {
-        String config = "src/tech/clusterfunk/configs/" + name + "_FS.json";
+        String config = CONFIG_ROOT + name + "_FS.json";
         Node node = null;
         try (BufferedReader reader = Files.newBufferedReader(Paths.get(config))) {
             JSONTokener tokener = new JSONTokener(reader);
@@ -41,7 +43,9 @@ public class OS {
                 node = new Node(null, childNodes, path, nodeType);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            System.err.println("File not found: " + config);
+            System.exit(1);
         }
         return node;
     }
@@ -49,7 +53,7 @@ public class OS {
     public OS(String name) {
         this.name = name;
         commandSet = IOHandler.loadCommandSet(name);
-        this.filesystem = loadFS();
+        this.fileSystem = loadFS();
     }
 
     public String getName() {

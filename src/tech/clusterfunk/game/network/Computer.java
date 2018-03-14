@@ -3,12 +3,15 @@ package tech.clusterfunk.game.network;
 import tech.clusterfunk.game.systems.OS;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Random;
 import java.util.StringJoiner;
+
+import static tech.clusterfunk.Main.CONFIG_ROOT;
 
 
 public class Computer {
@@ -41,7 +44,7 @@ public class Computer {
     }
 
     private String loadGenericUser(int userId) {
-        String config = "src/tech/clusterfunk/configs/USERS.txt";
+        String config = CONFIG_ROOT + "USERS.txt";
         String user = null;
         int lineNbr = 0;
         try (BufferedReader reader = Files.newBufferedReader(Paths.get(config),
