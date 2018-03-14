@@ -1,62 +1,59 @@
 {
-  "os": "OSY",
-  "filesystem": {
-    "path": "/",
-    "type": "d",
-    "children": [
-      {
-        "path": "/bin",
-        "type": "d",
-        "children": []
-      },
-      {
-        "path": "/var",
-        "type": "d",
-        "children": [
-          {
-            "path": "/var/logs",
-            "type": "d",
-            "children": []
-          }
-        ]
-      },
-      {
-        "path": "/home",
-        "type": "d",
-        "children": [
-          {
-            "path": "/home/UserXYZ",
-            "type": "d",
-            "children": [
-              {
-                "path": "/home/UserXYZ/Desktop",
-                "type": "d",
-                "children": []
-              },
-              {
-                "path": "/home/UserXYZ/Documents",
-                "type": "d",
-                "children": []
-              },
-              {
-                "path": "/home/UserXYZ/Pictures",
-                "type": "d",
-                "children": []
-              },
-              {
-                "path": "/home/UserXYZ/Applications",
-                "type": "d",
-                "children": []
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "path": "/etc",
-        "type": "d",
-        "children": []
-      }
-    ]
-  }
+  "path": "/",
+  "type": "d",
+  "children": [
+    {
+      "path": "/bin",
+      "type": "d",
+      "children": []
+    },
+    {
+      "path": "/var",
+      "type": "d",
+      "children": [
+        {
+          "path": "/var/logs",
+          "type": "d",
+          "children": []
+        }
+      ]
+    },
+    {
+      "path": "/home",
+      "type": "d",
+      "children": [
+        {
+          "path": "/home/UserXYZ",
+          "type": "d",
+          "children": [
+            {
+              "path": "/home/UserXYZ/Desktop",
+              "type": "d",
+              "children": []
+            },
+            {
+              "path": "/home/UserXYZ/Documents",
+              "type": "d",
+              "children": []
+            },
+            {
+              "path": "/home/UserXYZ/Pictures",
+              "type": "d",
+              "children": []
+            },
+            {
+              "path": "/home/UserXYZ/Applications",
+              "type": "d",
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "/etc",
+      "type": "d",
+      "children": []
+    }
+  ]
 }

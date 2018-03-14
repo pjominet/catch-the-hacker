@@ -46,6 +46,7 @@ public class Game {
         printer.print("\n");
         printer.println("--- Hacker stats ---", Attribute.BOLD, FColor.CYAN, BColor.BLACK);
         printer.println(blackhat.toString());
+        printer.println(blackhat.getComputer().getOs().showFS());
         printer.print("\n");
         printer.println("--- Network map ---", Attribute.BOLD, FColor.CYAN, BColor.BLACK);
         printer.println(network.toString());

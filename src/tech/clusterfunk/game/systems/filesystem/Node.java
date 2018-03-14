@@ -1,19 +1,22 @@
 package tech.clusterfunk.game.systems.filesystem;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import tech.clusterfunk.util.NodeTypeDeserializer;
+
 import java.util.List;
 
 public class Node {
+    @JsonIgnore
     private Node parent;
     private List<Node> children;
     private String path;
     private NodeType type;
+    @JsonIgnore
     private String permissions;
 
-    public Node(Node parent, List<Node> children, String path, NodeType type) {
-        this.parent = parent;
-        this.children = children;
-        this.path = path;
-        this.type = type;
+    public Node() {
         this.permissions = "r-w";
     }
 
@@ -29,12 +32,26 @@ public class Node {
         return children;
     }
 
+    public void setChildren(List<Node> children) {
+        this.children = children;
+    }
+
     public String getPath() {
         return path;
     }
 
+    public void setPath(String path) {
+        this.path = path;
+    }
+
     public NodeType getType() {
         return type;
+    }
+
+    @JsonProperty("type")
+    @JsonDeserialize(using = NodeTypeDeserializer.class)
+    public void setType(NodeType type) {
+        this.type = type;
     }
 
     public String getPermissions() {
@@ -47,12 +64,10 @@ public class Node {
 
     @Override
     public String toString() {
-        return "Node{" +
-                "parent=" + parent +
+        return "path='" + path +
+                "', parent=" + parent +
                 ", children=" + children +
-                ", path='" + path +
                 ", type=" + type +
-                ", permissions='" + permissions +
-                '}';
+                ", permissions='" + permissions;
     }
 }
