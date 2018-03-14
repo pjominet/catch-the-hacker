@@ -1,21 +1,39 @@
 package tech.clusterfunk.game.systems.filesystem;
 
+import java.util.List;
+
 public class Node {
+    private Node parent;
+    private List<Node> children;
     private String path;
-    private FileType type;
+    private NodeType type;
     private String permissions;
 
-    public Node(String path, FileType type) {
+    public Node(Node parent, List<Node> children, String path, NodeType type) {
+        this.parent = parent;
+        this.children = children;
         this.path = path;
         this.type = type;
         this.permissions = "r-w";
+    }
+
+    public Node getParent() {
+        return parent;
+    }
+
+    public void setParent(Node parent) {
+        this.parent = parent;
+    }
+
+    public List<Node> getChildren() {
+        return children;
     }
 
     public String getPath() {
         return path;
     }
 
-    public FileType getType() {
+    public NodeType getType() {
         return type;
     }
 
@@ -29,6 +47,12 @@ public class Node {
 
     @Override
     public String toString() {
-        return "Node{path=" + path + ", type=" + type + ", permissions=" + permissions +"}";
+        return "Node{" +
+                "parent=" + parent +
+                ", children=" + children +
+                ", path='" + path +
+                ", type=" + type +
+                ", permissions='" + permissions +
+                '}';
     }
 }

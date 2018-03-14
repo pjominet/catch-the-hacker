@@ -9,30 +9,22 @@ import java.util.List;
 public class Player implements Hacker {
     private String name;
     private Computer computer;
-    private List<Command> knowCommands;
+    private List<Command> commandList;
 
     public Player(String name, Computer computer) {
         this.name = name;
         this.computer = computer;
-        this.knowCommands = IOHandler.loadDefaultCommands();
+        this.commandList = IOHandler.loadDefaultCommands();
     }
 
-    public String listCommands(String os) {
-        StringBuilder builder = new StringBuilder();
-        builder.append(os).append(": ");
-        for (Command cmd : knowCommands) {
-            if (cmd.getOs().equals(os))
-                builder.append(cmd.getName()).append(" ");
-        }
-        return builder.toString();
+    @Override
+    public String getName() {
+        return name;
     }
 
-    public void learnCommand(Command cmd) {
-        knowCommands.add(cmd);
-    }
-
-    public void changeOS(String newOS) {
-        computer.installNewOS(newOS);
+    @Override
+    public Computer getComputer() {
+        return computer;
     }
 
     @Override
@@ -43,5 +35,19 @@ public class Player implements Hacker {
     @Override
     public void hack(Computer computer) {
         this.computer = computer;
+    }
+
+    public String listCommands(String os) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(os).append(": ");
+        for (Command cmd : commandList) {
+            if (cmd.getOs().equals(os))
+                builder.append(cmd.getName()).append(" ");
+        }
+        return builder.toString();
+    }
+
+    public void learnCommand(Command cmd) {
+        commandList.add(cmd);
     }
 }

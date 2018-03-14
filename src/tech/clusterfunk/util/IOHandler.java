@@ -1,7 +1,6 @@
 package tech.clusterfunk.util;
 
 import tech.clusterfunk.game.systems.Command;
-import tech.clusterfunk.game.systems.filesystem.FileSystem;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -69,10 +68,6 @@ public class IOHandler {
             System.err.println("FileSystem not found: " + config);
         }
         return defaultCommands;
-    }
-
-    public static FileSystem loadFS(String os) {
-        return null;
     }
 
     public static void writeToTextFile(String writable, String path) {
