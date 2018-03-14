@@ -50,4 +50,8 @@ public class Player implements Hacker {
     public void learnCommand(Command cmd) {
         commandList.add(cmd);
     }
+
+    public void changeOS(String os) {
+        this.computer.installNewOS(os);
+    }
 }
