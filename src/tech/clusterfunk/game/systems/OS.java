@@ -19,37 +19,37 @@ public class OS {
     private List<Command> commandSet;
     private Node filesystem;
 
-    private void loadFS() {
-        String config = "src/tech/clusterfunk/configs/" + name + "_FS.cnf";
+    private Node loadFS() {
+        String config = "src/tech/clusterfunk/configs/" + name + "_FS.json";
+        Node node = null;
         try (BufferedReader reader = Files.newBufferedReader(Paths.get(config))) {
             JSONTokener tokener = new JSONTokener(reader);
             JSONObject json = new JSONObject(tokener);
+            JSONObject fs = json.getJSONObject("filesystem");
 
-            JSONObject filesystem = json.getJSONObject("filesystem");
-
-            String path = filesystem.getString("path");
-
-            String type = filesystem.getString("type");
+            String path = fs.getString("path");
+            String type = fs.getString("type");
             NodeType nodeType = NodeType.DIRECTORY;
             if(type.equals("f")) nodeType = NodeType.FILE;
 
-            JSONArray children = filesystem.getJSONArray("children");
+            JSONArray children = fs.getJSONArray("children");
             List<Node> childNodes = null;
             if (children != null && children.length() > 0)
                 childNodes = JsonUtils.toList(children);
 
-            Node node = null;
             if (childNodes != null)
                 node = new Node(null, childNodes, path, nodeType);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return node;
     }
 
     public OS(String name) {
         this.name = name;
-        commandSet = IOHandler.loadCommandSet(this.name);
+        commandSet = IOHandler.loadCommandSet(name);
+        this.filesystem = loadFS();
     }
 
     public String getName() {
