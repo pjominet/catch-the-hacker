@@ -26,7 +26,7 @@ public class Computer {
         int max = 250;
         Random rnd = new Random(System.currentTimeMillis());
         StringJoiner joiner = new StringJoiner(".");
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 4; i++) {
             String byteblock = String.valueOf(rnd.nextInt(max - min) + min);
             joiner.add(byteblock);
         }
