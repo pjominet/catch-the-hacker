@@ -1,0 +1,57 @@
+{
+  "os": "LOONIX",
+  "filesystem": {
+    "path": "/",
+    "type": "d",
+    "children": [
+      {
+        "path": "bin/",
+        "type": "d",
+        "children": []
+      },
+      {
+        "path": "var/",
+        "type": "d",
+        "children": [
+          {
+            "path": "Logs/",
+            "type": "d",
+            "children": []
+          }
+        ]
+      },
+      {
+        "path": "home/",
+        "type": "d",
+        "children": [
+          {
+            "path": "UserXYZ/",
+            "type": "d",
+            "children": [
+              {
+                "path": "Desktop/",
+                "type": "d",
+                "children": []
+              },
+              {
+                "path": "Documents/",
+                "type": "d",
+                "children": []
+              },
+              {
+                "path": "Pictures/",
+                "type": "d",
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "path": "etc",
+        "type": "d",
+        "children": []
+      }
+    ]
+  }
+}

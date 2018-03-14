@@ -1,0 +1,9 @@
+ld::list files on current path
+cd:path:change to a given directory
+cpy:source,destination:copy source to destination
+rem:fileSystem:delete given fileSystem
+ping:address:check if computer at address is online
+nano:fileSystem:view fileSystem content
+echo:text,fileSystem:write given text to fileSystem
+perm:fileSystem,+-rwx:change fileSystem permission
+sudo:command:execute as super user

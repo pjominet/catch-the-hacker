@@ -1,0 +1,56 @@
+{
+  "os": "DOORS",
+  "filesystem": {
+    "path": "X:/",
+    "type": "d",
+    "children": [
+      {
+        "path": "Program Files/",
+        "type": "d",
+        "children": []
+      },
+      {
+        "path": "Program Data/",
+        "type": "d",
+        "children": [
+          {
+            "path": "Logs/",
+            "type": "d",
+            "children": []
+          }
+        ]
+      },
+      {
+        "path": "Users/",
+        "type": "d",
+        "children": [
+          {
+            "path": "UserXYZ/",
+            "type": "d",
+            "children": [
+              {
+                "path": "Desktop/",
+                "type": "d",
+                "children": []
+              },
+              {
+                "path": "Documents/",
+                "type": "d",
+                "children": []
+              },
+              {
+                "path": "Pictures/",
+                "type": "d",
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "path": "Doors",
+        "children": []
+      }
+    ]
+  }
+}
