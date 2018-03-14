@@ -24,8 +24,8 @@ public class Game {
 
         System.out.println("Loading network...");
         network = new Network(10);
-        network.addAddress(playerPC.getIp());
-        network.addAddress(blackhatPC.getIp());
+        network.addComputer(playerPC);
+        network.addComputer(blackhatPC);
 
         System.out.print("Done!\n\n");
     }

@@ -15,7 +15,7 @@ public class Network {
             for (int i = 0; i < size; i++) {
                 network.add(new Computer(i));
                 // wait to be sure next rnd seed is different
-                Thread.sleep(10);
+                Thread.sleep(7);
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -30,8 +30,9 @@ public class Network {
         }
     }
 
-    public void addAddress(String address) {
-        addressList.add(address);
+    public void addComputer(Computer computer) {
+        network.add(computer);
+        addressList.add(computer.getIp());
     }
 
     public List<Computer> getNetwork() {
