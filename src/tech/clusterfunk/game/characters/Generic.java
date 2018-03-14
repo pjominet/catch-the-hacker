@@ -16,24 +16,28 @@ public class Generic implements NPC {
         this.awareness = rnd.nextInt(5 - 1) + 1;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public Computer getComputer() {
         return computer;
     }
 
+    @Override
     public int getAwareness() {
         return awareness;
     }
 
+    @Override
     public void setAwareness(int awareness) {
         this.awareness = awareness;
     }
 
     @Override
     public String toString() {
-        return "User: " + name + ", awareness: " + awareness;
+        return "NAME=" + name + ", AWARENESS=" + awareness;
     }
 }
