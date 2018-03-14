@@ -19,8 +19,7 @@ public class Blackhat implements NPC, Hacker {
 
     @Override
     public String toString() {
-        return "Blackhat{name=" + name + ", pc=(" + computer + "), wallet=" + wallet +
-                "}";
+        return "NAME=" + name + ", PC=(" + computer + "), WALLET=" + wallet;
     }
 
     @Override

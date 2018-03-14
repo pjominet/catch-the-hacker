@@ -68,11 +68,11 @@ public class Computer {
         this.crytoCoins = rnd.nextInt(90) + 10;
     }
 
-    public Computer(String osName, int accessLevel, int crytoCoins, String user) {
+    public Computer(String osName, int accessLevel, String user) {
         this.ip = randomIPAddress();
         this.os = new OS(osName);
         this.accessLevel = accessLevel;
-        this.crytoCoins = crytoCoins;
+        this.crytoCoins = 0;
         this.user = user;
     }
 
@@ -96,9 +96,13 @@ public class Computer {
         return user;
     }
 
+    public void installNewOS(String osName) {
+        this.os = new OS(osName);
+    }
+
     @Override
     public String toString() {
-        return "Address:" + ip + ", User:" + user + ", Access Level:" + accessLevel + ", cryptoCoins:" +
-                crytoCoins;
+        return "OS: " + os.getName() + ", Address:" + ip + ", User:" + user + ", Access Level:" + accessLevel + ", " +
+                "cryptoCoins:" + crytoCoins;
     }
 }

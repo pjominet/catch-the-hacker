@@ -34,6 +34,6 @@ public class Generic implements NPC {
 
     @Override
     public String toString() {
-        return "User: " + name + ", awareness: " + awareness;
+        return "NAME=" + name + ", PC=(" + computer + "), AWARENESS=" + awareness;
     }
 }

@@ -15,11 +15,11 @@ public class Game {
         System.out.println("Setting up game:");
 
         System.out.println("Loading Player...");
-        Computer playerPC = new Computer("DOORS", 1, 0, "blyatrick");
+        Computer playerPC = new Computer("DOORS", 1, "blyatrick");
         player = new Player("Patrick", playerPC);
 
         System.out.println("Loading Hacker...");
-        Computer blackhatPC = new Computer("LOONIX", 5, 0, "h4ck3rm4n");
+        Computer blackhatPC = new Computer("LOONIX", 5, "h4ck3rm4n");
         blackhat = new Blackhat("Hackerman", blackhatPC);
 
         System.out.println("Loading network...");
