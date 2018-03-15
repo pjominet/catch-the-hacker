@@ -1,5 +1,5 @@
 # IntelliJ project files
 .idea
-*.iml
 bin
 META-INF/
+target
