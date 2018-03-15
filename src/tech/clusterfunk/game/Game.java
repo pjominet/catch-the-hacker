@@ -39,6 +39,7 @@ public class Game {
         printer.println(printer + "\n", Attribute.NONE, FColor.WHITE, BColor.BLACK);
 
         printer.println("--- Player stats ---", Attribute.BOLD, FColor.CYAN, BColor.BLACK);
+        printer.clear();
         printer.println(player.toString());
         printer.println(player.listCommands("DOORS"));
         printer.println(player.listCommands("LOONIX"));
@@ -46,10 +47,12 @@ public class Game {
         printer.println(player.getComputer().getOs().showFS());
         printer.print("\n");
         printer.println("--- Hacker stats ---", Attribute.BOLD, FColor.CYAN, BColor.BLACK);
+        printer.clear();
         printer.println(blackhat.toString());
         printer.println(blackhat.getComputer().getOs().showFS());
         printer.print("\n");
         printer.println("--- Network map ---", Attribute.BOLD, FColor.CYAN, BColor.BLACK);
+        printer.clear();
         printer.println(network.toString());
 
         printer.clear();
@@ -57,6 +60,7 @@ public class Game {
 
     public void run() {
         printer.println("=== Catch The Hacker ===\n", Attribute.BOLD, FColor.GREEN, BColor.BLACK);
+        printer.clear();
 
         printer.clear();
     }
