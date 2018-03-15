@@ -64,10 +64,12 @@ public class Node {
 
     @Override
     public String toString() {
-        return "path='" + path +
-                "', parent=" + parent +
-                ", children=" + children +
-                ", type=" + type +
-                ", permissions='" + permissions;
+        StringBuilder builder = new StringBuilder();
+        builder.append("path=").append(path)
+                .append(", type=").append(type)
+                .append(", permissions=").append(permissions);
+        if (!children.isEmpty())
+            builder.append(", children=").append(children);
+        return builder.toString();
     }
 }

@@ -43,6 +43,7 @@ public class Game {
         printer.println(player.listCommands("DOORS"));
         printer.println(player.listCommands("LOONIX"));
         printer.println(player.listCommands("OSY"));
+        printer.println(player.getComputer().getOs().showFS());
         printer.print("\n");
         printer.println("--- Hacker stats ---", Attribute.BOLD, FColor.CYAN, BColor.BLACK);
         printer.println(blackhat.toString());
