@@ -1,0 +1,9 @@
+ls::list files on current path
+cd:path:change to given directory
+cp:source,destination:copy from source to destination
+rm:fileSystem:remove fileSystem
+ping:address:check if computer at address is online
+vim:fileSystem:view fileSystem content
+echo:text,fileSystem:write text to fileSystem
+chmod:fileSystem,+-rwx:change fileSystem permissions
+sudo:command:execute as super user
