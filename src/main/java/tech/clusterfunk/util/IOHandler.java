@@ -5,6 +5,7 @@ import tech.clusterfunk.game.systems.Command;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -22,7 +23,8 @@ public class IOHandler {
         String config = CONFIG_ROOT + os + "_CMD.cnf";
         String pattern = "([a-z]+):(.*):(.+)";
         List<Command>commandSet = new ArrayList<>();
-        try (BufferedReader reader = Files.newBufferedReader(Paths.get(config),
+        try (BufferedReader reader = Files.newBufferedReader(
+                Paths.get(IOHandler.class.getResource(config).toURI()),
                 StandardCharsets.UTF_8)) {
             Pattern regex = Pattern.compile(pattern);
             Matcher m;
@@ -34,7 +36,7 @@ public class IOHandler {
                 }
             }
             reader.close();
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException e) {
             //e.printStackTrace();
             System.err.println("File not found: " + config);
             System.exit(1);
@@ -46,7 +48,8 @@ public class IOHandler {
         String config = CONFIG_ROOT + "PLAYER_CMD.cnf";
         String pattern = "([A-Z]+):(.*)";
         List<Command> defaultCommands = new ArrayList<>();
-        try (BufferedReader reader = Files.newBufferedReader(Paths.get(config),
+        try (BufferedReader reader = Files.newBufferedReader(
+                Paths.get(IOHandler.class.getResource(config).toURI()),
                 StandardCharsets.UTF_8)) {
             Pattern regex = Pattern.compile(pattern);
             Matcher m;
@@ -66,7 +69,7 @@ public class IOHandler {
                 }
             }
             reader.close();
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException e) {
             //e.printStackTrace();
             System.err.println("File not found: " + config);
             System.exit(1);

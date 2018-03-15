@@ -6,6 +6,7 @@ import tech.clusterfunk.util.IOHandler;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.List;
 
 import static tech.clusterfunk.Main.CONFIG_ROOT;
@@ -21,8 +22,8 @@ public class OS {
 
         Node node = null;
         try {
-            node = objectMapper.readValue(new File(config), Node.class);
-        } catch (IOException e) {
+            node = objectMapper.readValue(new File(this.getClass().getResource(config).toURI()), Node.class);
+        } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
             System.exit(1);
         }

@@ -5,6 +5,7 @@ import tech.clusterfunk.game.systems.OS;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -47,14 +48,15 @@ public class Computer {
         String config = CONFIG_ROOT + "USERS.txt";
         String user = null;
         int lineNbr = 0;
-        try (BufferedReader reader = Files.newBufferedReader(Paths.get(config),
+        try (BufferedReader reader = Files.newBufferedReader(
+                Paths.get(this.getClass().getResource(config).toURI()),
                 StandardCharsets.UTF_8)) {
             for (String line; (line = reader.readLine()) != null; ) {
                 user = line;
                 if (++lineNbr == userId) break;
             }
             reader.close();
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException e) {
             //e.printStackTrace();
             System.err.println("User list not found: " + config);
         }
