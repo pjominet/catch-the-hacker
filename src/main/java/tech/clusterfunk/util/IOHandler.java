@@ -1,12 +1,16 @@
 package tech.clusterfunk.util;
 
+import tech.clusterfunk.Main;
 import tech.clusterfunk.game.systems.Command;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileStore;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
@@ -19,13 +23,12 @@ import java.util.regex.Pattern;
 import static tech.clusterfunk.Main.CONFIG_ROOT;
 
 public class IOHandler {
+
     public static List<Command> loadCommandSet(String os) {
         String config = CONFIG_ROOT + os + "_CMD.cnf";
         String pattern = "([a-z]+):(.*):(.+)";
         List<Command>commandSet = new ArrayList<>();
-        try (BufferedReader reader = Files.newBufferedReader(
-                Paths.get(IOHandler.class.getResource(config).toURI()),
-                StandardCharsets.UTF_8)) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(IOHandler.class.getResourceAsStream(config), StandardCharsets.UTF_8))) {
             Pattern regex = Pattern.compile(pattern);
             Matcher m;
             for (String line; (line = reader.readLine()) != null; ) {
@@ -36,7 +39,7 @@ public class IOHandler {
                 }
             }
             reader.close();
-        } catch (IOException | URISyntaxException e) {
+        } catch (IOException e) {
             //e.printStackTrace();
             System.err.println("File not found: " + config);
             System.exit(1);

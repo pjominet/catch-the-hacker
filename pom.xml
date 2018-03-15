@@ -71,7 +71,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <mainClass>tech.clusterfunk.Main</mainClass>
-                            <classpathPrefix>dependency-jars/</classpathPrefix>
+                            <classpathPrefix>dependencies/</classpathPrefix>
                         </manifest>
                     </archive>
                 </configuration>
