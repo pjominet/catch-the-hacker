@@ -1,9 +1,8 @@
 package tech.clusterfunk.game.network;
 
 import java.util.ArrayList;
+import java.util.Formatter;
 import java.util.List;
-
-import static java.util.stream.Collectors.joining;
 
 public class Network {
     private List<Computer> network;
@@ -45,6 +44,15 @@ public class Network {
 
     @Override
     public String toString() {
-        return addressList.stream().collect(joining(" - "));
+        StringBuilder builder = new StringBuilder();
+        Formatter formatter = new Formatter(builder);
+        int index = 0;
+        for (String address : addressList) {
+            formatter.format("%-15s", address);
+            if (++index % 4 == 0) {
+                builder.append("\n");
+            } else builder.append("  ");
+        }
+        return builder.toString();
     }
 }

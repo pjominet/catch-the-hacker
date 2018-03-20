@@ -6,7 +6,6 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -28,9 +27,8 @@ public class IOHandler {
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(
                         IOHandler.class.getResourceAsStream(config),
-                        StandardCharsets.UTF_8
-                )
-        )) {
+                        StandardCharsets.UTF_8))
+        ) {
             Pattern regex = Pattern.compile(pattern);
             Matcher m;
             for (String line; (line = reader.readLine()) != null; ) {
@@ -56,9 +54,8 @@ public class IOHandler {
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(
                         IOHandler.class.getResourceAsStream(config),
-                        StandardCharsets.UTF_8
-                )
-        )) {
+                        StandardCharsets.UTF_8))
+        ) {
             Pattern regex = Pattern.compile(pattern);
             Matcher m;
             for (String line; (line = reader.readLine()) != null; ) {
