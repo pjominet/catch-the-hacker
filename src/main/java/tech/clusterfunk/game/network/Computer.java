@@ -1,10 +1,12 @@
 package tech.clusterfunk.game.network;
 
 import tech.clusterfunk.game.systems.OS;
+import tech.clusterfunk.util.IOHandler;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -48,15 +50,18 @@ public class Computer {
         String config = CONFIG_ROOT + "USERS.txt";
         String user = null;
         int lineNbr = 0;
-        try (BufferedReader reader = Files.newBufferedReader(
-                Paths.get(this.getClass().getResource(config).toURI()),
-                StandardCharsets.UTF_8)) {
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(
+                        IOHandler.class.getResourceAsStream(config),
+                        StandardCharsets.UTF_8
+                )
+        )) {
             for (String line; (line = reader.readLine()) != null; ) {
                 user = line;
                 if (++lineNbr == userId) break;
             }
             reader.close();
-        } catch (IOException | URISyntaxException e) {
+        } catch (IOException e) {
             //e.printStackTrace();
             System.err.println("User list not found: " + config);
         }
