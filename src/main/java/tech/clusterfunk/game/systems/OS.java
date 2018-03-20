@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import tech.clusterfunk.game.systems.filesystem.Node;
 import tech.clusterfunk.util.IOHandler;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import static tech.clusterfunk.Main.CONFIG_ROOT;
@@ -22,8 +22,12 @@ public class OS {
 
         Node node = null;
         try {
-            node = objectMapper.readValue(new File(this.getClass().getResource(config).toURI()), Node.class);
-        } catch (IOException | URISyntaxException e) {
+            node = objectMapper.readValue(
+                    new InputStreamReader(
+                            this.getClass().getResourceAsStream(config),
+                            StandardCharsets.UTF_8) {
+                    }, Node.class);
+        } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
         }
