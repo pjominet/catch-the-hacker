@@ -1,12 +1,16 @@
 package tech.clusterfunk.game.systems;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jdk.nashorn.internal.ir.WhileNode;
 import tech.clusterfunk.game.systems.filesystem.Node;
 import tech.clusterfunk.util.IOHandler;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Iterator;
 import java.util.List;
 
 import static tech.clusterfunk.Main.CONFIG_ROOT;
@@ -20,13 +24,11 @@ public class OS {
         String config = CONFIG_ROOT + name + "_FS.json";
         ObjectMapper objectMapper = new ObjectMapper();
 
+        JsonNode jsonNode;
         Node node = null;
         try {
-            node = objectMapper.readValue(
-                    new InputStreamReader(
-                            this.getClass().getResourceAsStream(config),
-                            StandardCharsets.UTF_8) {
-                    }, Node.class);
+            jsonNode = objectMapper.readTree(this.getClass().getResourceAsStream(config));
+            node = objectMapper.convertValue(jsonNode, Node.class);
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
@@ -51,6 +53,10 @@ public class OS {
 
     public String showFS() {
         return fileSystem.toString();
+    }
+
+    public String getCurrentFSNode() {
+        return fileSystem.getPath();
     }
 
     public Command getCommand(String cmdName) {

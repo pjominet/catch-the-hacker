@@ -7,61 +7,100 @@ import tech.clusterfunk.game.characters.Player;
 import tech.clusterfunk.game.network.Computer;
 import tech.clusterfunk.game.network.Network;
 
+import java.util.Scanner;
+
 public class Game {
 
     private Player player;
     private Blackhat blackhat;
     private Network network;
-    private ColoredPrinter printer = new ColoredPrinter.Builder(1, false).build();
+
+    private ColoredPrinter out;
+    private Scanner in;
 
     public Game() {
-        System.out.println("Setting up game:");
+        out = new ColoredPrinter.Builder(1, false).build();
+        in = new Scanner(System.in);
+    }
 
-        System.out.println("Loading Player...");
-        Computer playerPC = new Computer("DOORS", 1, "blyatrick");
-        player = new Player("Patrick", playerPC);
+    private void init(String playerName, String playerOs, String playerNick) {
+        System.out.println(">> Setting up system...");
 
-        System.out.println("Loading Hacker...");
         Computer blackhatPC = new Computer("LOONIX", 5, "h4ck3rm4n");
         blackhat = new Blackhat("Hackerman", blackhatPC);
 
-        System.out.println("Loading network...");
-        network = new Network(10);
-        network.addComputer(playerPC);
-        network.addComputer(blackhatPC);
+        Computer playerPC = new Computer(playerOs, 1, playerNick);
+        player = new Player(playerName, playerPC);
 
-        System.out.print("Done!\n\n");
+        network = new Network(10);
+        network.addComputer(blackhatPC);
+        network.addComputer(playerPC);
+
+        System.out.println(">> Done!");
     }
 
     public void debug() {
-        printer.println("=== Running Debug Mode ===\n", Attribute.BOLD, FColor.MAGENTA, BColor.BLACK);
 
-        printer.println(printer + "\n", Attribute.NONE, FColor.WHITE, BColor.BLACK);
+        out.println("=== Running Debug Mode ===\n", Attribute.BOLD, FColor.MAGENTA, BColor.BLACK);
 
-        printer.println("--- Player stats ---", Attribute.BOLD, FColor.CYAN, BColor.BLACK);
-        printer.clear();
-        printer.println(player.toString());
-        printer.println(player.listCommands("DOORS"));
-        printer.println(player.listCommands("LOONIX"));
-        printer.println(player.listCommands("OSY"));
-        printer.println(player.getComputer().getOs().showFS());
-        printer.print("\n");
-        printer.println("--- Hacker stats ---", Attribute.BOLD, FColor.CYAN, BColor.BLACK);
-        printer.clear();
-        printer.println(blackhat.toString());
-        printer.println(blackhat.getComputer().getOs().showFS());
-        printer.print("\n");
-        printer.println("--- Network map ---", Attribute.BOLD, FColor.CYAN, BColor.BLACK);
-        printer.clear();
-        printer.println(network.toString());
+        out.println(out + "\n", Attribute.NONE, FColor.WHITE, BColor.BLACK);
 
-        printer.clear();
+        init("Patrick", "DOORS", "blyatrick");
+
+        out.println("--- Player stats ---", Attribute.BOLD, FColor.CYAN, BColor.BLACK);
+        out.clear();
+        out.println(player.toString());
+        out.println(player.listCommands("DOORS"));
+        out.println(player.listCommands("LOONIX"));
+        out.println(player.listCommands("OSY"));
+        out.println(player.getComputer().getOs().showFS());
+        out.print("\n");
+        out.println("--- Hacker stats ---", Attribute.BOLD, FColor.CYAN, BColor.BLACK);
+        out.clear();
+        out.println(blackhat.toString());
+        out.println(blackhat.getComputer().getOs().showFS());
+        out.print("\n");
+        out.println("--- Network map ---", Attribute.BOLD, FColor.CYAN, BColor.BLACK);
+        out.clear();
+        out.println(network.toString());
+
+        out.clear();
     }
 
     public void run() {
-        printer.println("=== Catch The Hacker ===\n", Attribute.BOLD, FColor.GREEN, BColor.BLACK);
-        printer.clear();
+        out.println("=== Catch The Hacker ===\n", Attribute.BOLD, FColor.MAGENTA, BColor.BLACK);
+        out.clear();
 
-        printer.clear();
+        String lastCmd = start();
+        out.println("Last given command: " + lastCmd);
+        in.close();
+    }
+
+    private String start() {
+        out.print("It is your first day as cybersecurity employee at CySec.\n" +
+                "You walk to your office, take a seat at your new desk and boot your company computer.\n" +
+                "The screen flashes briefly and a prompt appears...\n");
+        System.out.print("\n>> Please enter your name: ");
+        String name = in.nextLine();
+
+        out.println("\nAs the system processes your name a new prompt appears...");
+        System.out.print("\n>> Welcome to CySec " + name + "!\n" +
+                ">> Please choose an Operation System: ");
+        String os = in.next();
+
+        out.println("\nThe system installer begins to run and it prompts you again...");
+        System.out.print("\n>> Please provide a username: ");
+        String nick = in.next();
+
+        init(name, os, nick);
+
+        out.print("\nAs installer finishes, you are being greeted by the welcome screen of " +
+                player.getComputer().getOs().getName() + ".\n"
+                + "You launch the terminal and start working...\n");
+        System.out.print("\n" + player.getComputer().getOs().getCurrentFSNode() + " > ");
+        String command = in.next();
+
+        out.clear();
+        return command;
     }
 }

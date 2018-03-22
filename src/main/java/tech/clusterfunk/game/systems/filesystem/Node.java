@@ -69,7 +69,9 @@ public class Node {
                 .append(", type=").append(type)
                 .append(", permissions=").append(permissions);
         if (!children.isEmpty())
-            builder.append(", children=").append(children);
+            builder.append("\nchildren=").append(children);
+        if (parent != null)
+            builder.append(", parent=").append(parent.getPath());
         return builder.toString();
     }
 }
