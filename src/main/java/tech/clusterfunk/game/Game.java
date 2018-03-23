@@ -46,6 +46,7 @@ public class Game {
         out.println(out + "\n", Attribute.NONE, FColor.WHITE, BColor.BLACK);
 
         init("Patrick", "DOORS", "blyatrick");
+        System.out.println();
 
         out.println("--- Player stats ---", Attribute.BOLD, FColor.CYAN, BColor.BLACK);
         out.clear();

@@ -8,7 +8,7 @@ public class Main {
 
     public static void main(String[] args) {
         Game game = new Game();
-        //game.debug();
-        game.run();
+        game.debug();
+        //game.run();
     }
 }
