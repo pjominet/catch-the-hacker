@@ -11,8 +11,8 @@ import java.io.IOException;
 
 public class NodeTypeDeserializer extends JsonDeserializer {
     @Override
-    public NodeType deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws
-            IOException, JsonProcessingException {
+    public NodeType deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
+            throws IOException, JsonProcessingException {
         NodeType type = NodeType.fromAbbreviation(jsonParser.getValueAsString());
         if (type != null) {
             return type;

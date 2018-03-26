@@ -2,15 +2,10 @@ package tech.clusterfunk.game.systems;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jdk.nashorn.internal.ir.WhileNode;
 import tech.clusterfunk.game.systems.filesystem.Node;
 import tech.clusterfunk.util.IOHandler;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.util.Iterator;
 import java.util.List;
 
 import static tech.clusterfunk.Main.CONFIG_ROOT;
@@ -22,19 +17,19 @@ public class OS {
 
     private Node loadFS() {
         String config = CONFIG_ROOT + name + "_FS.json";
-        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper();
 
         JsonNode jsonNode;
-        Node node = null;
+        Node root = null;
         try {
-            jsonNode = objectMapper.readTree(this.getClass().getResourceAsStream(config));
-            node = objectMapper.convertValue(jsonNode, Node.class);
+            jsonNode = mapper.readTree(this.getClass().getResourceAsStream(config));
+            root = mapper.convertValue(jsonNode, Node.class);
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
         }
 
-        return node;
+        return root;
     }
 
     public OS(String name) {
@@ -56,17 +51,15 @@ public class OS {
     }
 
     public String getCurrentFSNode() {
-        return fileSystem.getPath();
+        return fileSystem.getPathToCurrentNode();
     }
 
     public Command getCommand(String cmdName) {
-        Command command = null;
-        for (Command cmd : commandSet) {
-            if (cmdName.equals(cmd.getName())) {
-                command = cmd;
-                break;
+        for (Command command : commandSet) {
+            if (cmdName.equals(command.getName())) {
+                return command;
             }
         }
-        return command;
+        return null;
     }
 }

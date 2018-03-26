@@ -3,12 +3,12 @@ package tech.clusterfunk.game.systems.filesystem;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import tech.clusterfunk.util.NodeParentDeserializer;
 import tech.clusterfunk.util.NodeTypeDeserializer;
 
 import java.util.List;
 
 public class Node {
-    @JsonIgnore
     private Node parent;
     private List<Node> children;
     private String path;
@@ -24,6 +24,8 @@ public class Node {
         return parent;
     }
 
+    // TODO: not working, check
+    @JsonDeserialize(using = NodeParentDeserializer.class)
     public void setParent(Node parent) {
         this.parent = parent;
     }
@@ -60,6 +62,16 @@ public class Node {
 
     public void setPermissions(String permissions) {
         this.permissions = permissions;
+    }
+
+    public String getPathToCurrentNode() {
+        StringBuilder builder = new StringBuilder();
+        if (parent != null) {
+            builder.append(getPathToCurrentNode());
+            builder.append(parent.getPath());
+        }
+        builder.append(this.path);
+        return builder.toString();
     }
 
     @Override
