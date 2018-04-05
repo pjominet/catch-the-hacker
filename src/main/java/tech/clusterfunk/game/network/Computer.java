@@ -1,21 +1,9 @@
 package tech.clusterfunk.game.network;
 
-import tech.clusterfunk.game.characters.NPC;
 import tech.clusterfunk.game.systems.OS;
-import tech.clusterfunk.util.IOHandler;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Random;
 import java.util.StringJoiner;
-
-import static tech.clusterfunk.Main.CONFIG_ROOT;
 
 
 public class Computer {
@@ -91,7 +79,7 @@ public class Computer {
 
     @Override
     public String toString() {
-        return "os: " + os.getName() + ", ip: " + ip + ", user: " + user +
-                ", access level: " + accessLevel + ", cryptoCoins: " + crytoCoins;
+        return "OS: " + os.getName() + ", IP: " + ip + ", USER: " + user +
+                ", access level: " + accessLevel + ", crypto coins: " + crytoCoins;
     }
 }

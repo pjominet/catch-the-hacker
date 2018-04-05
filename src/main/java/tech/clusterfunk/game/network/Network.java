@@ -36,6 +36,7 @@ public class Network {
         addressList.add(computer.getIp());
     }
 
+    // TODO implement custom invalid address exception
     public Computer findComputerAt(String ip) {
         Computer found = null;
         if (ip.matches("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}")) {

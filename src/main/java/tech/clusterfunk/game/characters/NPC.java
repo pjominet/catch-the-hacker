@@ -25,8 +25,8 @@ public class NPC extends Character {
                         StandardCharsets.UTF_8
                 )
         )) {
-            for (String name; (name = reader.readLine()) != null; ) {
-                userName = name;
+            for (String line; (line = reader.readLine()) != null; ) {
+                userName = line;
                 if (lineNbr++ == userId) break;
             }
             reader.close();

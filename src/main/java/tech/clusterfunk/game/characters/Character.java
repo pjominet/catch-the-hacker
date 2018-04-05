@@ -3,8 +3,8 @@ package tech.clusterfunk.game.characters;
 import tech.clusterfunk.game.network.Computer;
 
 abstract class Character {
-    protected String name;
-    protected Computer computer;
+    String name;
+    Computer computer;
 
     Character(String name, Computer computer) {
         this.name = name;
@@ -21,9 +21,6 @@ abstract class Character {
 
     @Override
     public String toString() {
-        return "Character{" +
-                "name='" + name + '\'' +
-                ", computer='" + computer + '\'' +
-                '}';
+        return "NAME=" + name + ", PC=(" + computer + ')';
     }
 }

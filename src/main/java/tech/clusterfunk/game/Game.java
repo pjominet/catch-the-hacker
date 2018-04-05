@@ -65,6 +65,13 @@ public class Game {
         out.clear();
         out.println(network.toString());
 
+        System.out.print("Find Computer: ");
+        String ip = in.next();
+        Computer computer = network.findComputerAt(ip);
+        if (computer != null)
+            out.println(computer.toString());
+        else out.println("No computer found at this address!");
+
         out.clear();
     }
 
