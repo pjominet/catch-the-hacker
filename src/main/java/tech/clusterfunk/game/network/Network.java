@@ -1,5 +1,7 @@
 package tech.clusterfunk.game.network;
 
+import tech.clusterfunk.game.characters.NPC;
+
 import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
@@ -12,7 +14,7 @@ public class Network {
         network = new ArrayList<>();
         try {
             for (int i = 0; i < size; i++) {
-                network.add(new Computer(i));
+                network.add(new NPC(i).getComputer());
                 // wait to be sure next rnd seed is different
                 Thread.sleep(7);
             }
@@ -32,6 +34,17 @@ public class Network {
     public void addComputer(Computer computer) {
         network.add(computer);
         addressList.add(computer.getIp());
+    }
+
+    public Computer findComputerAt(String ip) {
+        Computer found = null;
+        if (ip.matches("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}")) {
+            for (Computer computer : network) {
+                if (computer.getIp().equals(ip))
+                    found = computer;
+            }
+        }
+        return found;
     }
 
     public List<Computer> getNetwork() {

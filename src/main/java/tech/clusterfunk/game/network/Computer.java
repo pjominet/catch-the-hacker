@@ -1,5 +1,6 @@
 package tech.clusterfunk.game.network;
 
+import tech.clusterfunk.game.characters.NPC;
 import tech.clusterfunk.game.systems.OS;
 import tech.clusterfunk.util.IOHandler;
 
@@ -46,32 +47,10 @@ public class Computer {
         return os;
     }
 
-    private String loadGenericUser(int userId) {
-        String config = CONFIG_ROOT + "USERS.txt";
-        String user = null;
-        int lineNbr = 0;
-        try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(
-                        IOHandler.class.getResourceAsStream(config),
-                        StandardCharsets.UTF_8
-                )
-        )) {
-            for (String line; (line = reader.readLine()) != null; ) {
-                user = line;
-                if (++lineNbr == userId) break;
-            }
-            reader.close();
-        } catch (IOException e) {
-            //e.printStackTrace();
-            System.err.println("User list not found: " + config);
-        }
-        return user;
-    }
-
-    Computer(int userId) {
+    public Computer(String user) {
         this.ip = randomIPAddress();
         this.os = randomOS();
-        this.user = loadGenericUser(userId);
+        this.user = user;
 
         Random rnd = new Random(System.currentTimeMillis());
         this.accessLevel = rnd.nextInt(4) + 1;

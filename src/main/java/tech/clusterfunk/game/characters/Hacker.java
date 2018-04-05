@@ -2,6 +2,6 @@ package tech.clusterfunk.game.characters;
 
 import tech.clusterfunk.game.network.Computer;
 
-public interface Hacker extends Character {
+interface Hacker {
     void hack(Computer computer);
 }

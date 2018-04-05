@@ -6,35 +6,12 @@ import tech.clusterfunk.util.IOHandler;
 
 import java.util.List;
 
-public class Player implements Hacker {
-    private String name;
-    private Computer computer;
+public class Player extends Character implements Hacker {
     private List<Command> commandList;
 
     public Player(String name, Computer computer) {
-        this.name = name;
-        this.computer = computer;
+        super(name, computer);
         this.commandList = IOHandler.loadDefaultCommands();
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public Computer getComputer() {
-        return computer;
-    }
-
-    @Override
-    public String toString() {
-        return "NAME=" + name + ", PC=(" + computer + ")";
-    }
-
-    @Override
-    public void hack(Computer computer) {
-        this.computer = computer;
     }
 
     public String listCommands(String os) {
@@ -49,6 +26,11 @@ public class Player implements Hacker {
 
     public void learnCommand(Command cmd) {
         commandList.add(cmd);
+    }
+
+    @Override
+    public void hack(Computer computer) {
+        this.computer = computer;
     }
 
     public void changeOS(String os) {
