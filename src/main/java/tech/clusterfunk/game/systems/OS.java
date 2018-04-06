@@ -53,10 +53,10 @@ public class OS {
         }
     }
 
-    public boolean hasCommand(String cmdName) {
+    public boolean hasCommand(Command input) {
         boolean found = false;
         for (Command command: commandSet) {
-            found = cmdName.equals(command.getName());
+            found = input.equals(command);
             if (found) break;
         }
         return found;
