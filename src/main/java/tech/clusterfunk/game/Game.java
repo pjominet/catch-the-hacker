@@ -50,7 +50,6 @@ public class Game {
                 String[] tokens = line.split("=");
                 initConfig.put(tokens[0], tokens[1]);
             }
-            reader.close();
         } catch (IOException e) {
             System.err.println("No init config found at: " + config);
         }
@@ -83,13 +82,17 @@ public class Game {
         init("Patrick", "DOORS", "blyatrick");
 
         OS playerOS = player.getComputer().getOs();
-        playerOS.setFileSystemPosition(playerOS.changeDirectory("UserXYZ", playerOS.getFileSystemPosition()));
         System.out.println();
 
         out.println("--- Player stats ---", Attribute.BOLD, FColor.CYAN, BColor.BLACK);
         out.clear();
         out.println(player.toString());
-        out.println(playerOS.getFileSystemPosition().toString());
+        // change to home directory
+        playerOS.changeDirectory("UserXYZ", playerOS.getFileSystemPosition());
+        // simulate command prompt at current FS position
+        out.println(playerOS.getCurrentPath() + " > ");
+        // list child directories
+        playerOS.listDirectories(playerOS.getFileSystemPosition());
         out.print("\n");
         out.println("--- Hacker stats ---", Attribute.BOLD, FColor.CYAN, BColor.BLACK);
         out.clear();

@@ -1,21 +1,21 @@
 {
-  "path": "/",
+  "name": "/",
   "type": "d",
   "permissions": "r--",
   "children": [
     {
-      "path": "/bin",
+      "name": "bin",
       "type": "d",
       "permissions": "r-x",
       "children": []
     },
     {
-      "path": "/var",
+      "name": "var",
       "type": "d",
       "permissions": "r--",
       "children": [
         {
-          "path": "/var/logs",
+          "name": "logs",
           "type": "d",
           "permissions": "rw-",
           "children": []
@@ -23,35 +23,35 @@
       ]
     },
     {
-      "path": "/home",
+      "name": "home",
       "type": "d",
       "permissions": "rw-",
       "children": [
         {
-          "path": "/home/UserXYZ",
+          "name": "UserXYZ",
           "type": "d",
           "permissions": "rwx",
           "children": [
             {
-              "path": "/home/UserXYZ/desktop",
+              "name": "desktop",
               "type": "d",
               "permissions": "rwx",
               "children": []
             },
             {
-              "path": "/home/UserXYZ/documents",
+              "name": "documents",
               "type": "d",
               "permissions": "rwx",
               "children": []
             },
             {
-              "path": "/home/UserXYZ/pictures",
+              "name": "pictures",
               "type": "d",
               "permissions": "rwx",
               "children": []
             },
             {
-              "path": "/home/UserXYZ/applications",
+              "name": "applications",
               "type": "d",
               "permissions": "rwx",
               "children": []
@@ -61,7 +61,7 @@
       ]
     },
     {
-      "path": "/etc",
+      "name": "etc",
       "type": "d",
       "permissions": "r--",
       "children": []

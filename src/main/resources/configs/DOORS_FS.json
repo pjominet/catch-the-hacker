@@ -1,21 +1,21 @@
 {
-  "path": "X:",
+  "name": "X:",
   "type": "d",
   "permissions": "r--",
   "children": [
     {
-      "path": "X:/Program Files",
+      "name": "Program Files",
       "type": "d",
       "permissions": "r-x",
       "children": []
     },
     {
-      "path": "X:/Program Data",
+      "name": "Program Data",
       "type": "d",
       "permissions": "r--",
       "children": [
         {
-          "path": "X:/Program Data/Logging",
+          "name": "Logging",
           "type": "d",
           "permissions": "rw-",
           "children": []
@@ -23,35 +23,35 @@
       ]
     },
     {
-      "path": "X:/Users",
+      "name": "Users",
       "type": "d",
       "permissions": "rw-",
       "children": [
         {
-          "path": "X:/Users/UserXYZ",
+          "name": "UserXYZ",
           "type": "d",
           "permissions": "rwx",
           "children": [
             {
-              "path": "X:/Users/UserXYZ/Desktop",
+              "name": "Desktop",
               "type": "d",
               "permissions": "rwx",
               "children": []
             },
             {
-              "path": "X:/Users/UserXYZ/Documents",
+              "name": "Documents",
               "type": "d",
               "permissions": "rwx",
               "children": []
             },
             {
-              "path": "X:/Users/UserXYZ/Pictures",
+              "name": "Pictures",
               "type": "d",
               "permissions": "rwx",
               "children": []
             },
             {
-              "path": "X:/Users/UserXYZ/AppData",
+              "name": "AppData",
               "type": "d",
               "permissions": "rwx",
               "children": []
@@ -61,7 +61,7 @@
       ]
     },
     {
-      "path": "X:/Doors",
+      "name": "Doors",
       "type": "d",
       "permissions": "r--",
       "children": []

@@ -4,7 +4,8 @@ import tech.clusterfunk.game.systems.filesystem.Node;
 import tech.clusterfunk.util.FilesystemLoader;
 import tech.clusterfunk.util.CommandLoader;
 
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class OS {
@@ -13,12 +14,7 @@ public class OS {
     private Node fileSystemPosition;
 
     private void loadFS(String osName) {
-        try {
-            fileSystemPosition = FilesystemLoader.parseTree(osName);
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
+        fileSystemPosition = FilesystemLoader.parseFileSystem(osName);
     }
 
     public OS(String name) {
@@ -43,34 +39,46 @@ public class OS {
         this.fileSystemPosition = fileSystemPosition;
     }
 
-    // TODO: review, should always print whole FS not part of it
-    public void printFileSystem(Node current) {
-        System.out.println(current.getPath());
-        if (!current.getChildren().isEmpty()) {
-            for (Node child : current.getChildren()) {
-                printFileSystem(child);
-            }
-        }
-    }
-
-    public boolean hasCommand(Command input) {
+    public boolean hasCommand(String cmdName) {
         boolean found = false;
-        for (Command command: commandSet) {
-            found = input.equals(command);
+        for (Command command : commandSet) {
+            found = cmdName.equals(command.getName());
             if (found) break;
         }
         return found;
     }
 
-    // TODO: not working as intended
-    public Node changeDirectory(String path, Node current) {
-        if (!current.getPath().contains(path)) {
-            if (!current.getChildren().isEmpty()) {
-                for (Node child: current.getChildren()) {
-                    current = changeDirectory(path, child);
-                }
-            }
+    public List<String> getDirectoriesToRoot() {
+        Node current = fileSystemPosition;
+        List<String> pathNames = new ArrayList<>();
+        while(current.getParent() != null) {
+            pathNames.add(current.getName());
+            current = current.getParent();
         }
-        return current;
+        pathNames.add(current.getName());
+
+        Collections.reverse(pathNames);
+        return pathNames;
+    }
+
+    public String getCurrentPath() {
+        StringBuilder builder = new StringBuilder();
+        getDirectoriesToRoot().forEach(name -> {
+            builder.append(name);
+            if (!name.equals("/"))
+                builder.append("/");
+        });
+
+        return builder.toString();
+    }
+
+    public void listDirectories(Node current) {
+        current.getChildren().forEach(child -> System.out.println(child.getName()));
+        current.getChildren().forEach(this::listDirectories);
+    }
+
+    public void changeDirectory(String dir, Node current) {
+        if (current.getName().contains(dir)) fileSystemPosition = current;
+        else current.getChildren().forEach(child -> changeDirectory(dir, child));
     }
 }
