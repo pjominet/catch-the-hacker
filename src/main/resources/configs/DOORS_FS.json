@@ -1,19 +1,23 @@
 {
   "path": "X:",
   "type": "d",
+  "permissions": "r--",
   "children": [
     {
       "path": "X:/Program Files",
       "type": "d",
+      "permissions": "r-x",
       "children": []
     },
     {
       "path": "X:/Program Data",
       "type": "d",
+      "permissions": "r--",
       "children": [
         {
           "path": "X:/Program Data/Logging",
           "type": "d",
+          "permissions": "rw-",
           "children": []
         }
       ]
@@ -21,29 +25,35 @@
     {
       "path": "X:/Users",
       "type": "d",
+      "permissions": "rw-",
       "children": [
         {
           "path": "X:/Users/UserXYZ",
           "type": "d",
+          "permissions": "rwx",
           "children": [
             {
               "path": "X:/Users/UserXYZ/Desktop",
               "type": "d",
+              "permissions": "rwx",
               "children": []
             },
             {
               "path": "X:/Users/UserXYZ/Documents",
               "type": "d",
+              "permissions": "rwx",
               "children": []
             },
             {
               "path": "X:/Users/UserXYZ/Pictures",
               "type": "d",
+              "permissions": "rwx",
               "children": []
             },
             {
               "path": "X:/Users/UserXYZ/AppData",
               "type": "d",
+              "permissions": "rwx",
               "children": []
             }
           ]
@@ -52,6 +62,8 @@
     },
     {
       "path": "X:/Doors",
+      "type": "d",
+      "permissions": "r--",
       "children": []
     }
   ]

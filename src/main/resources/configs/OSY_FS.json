@@ -1,19 +1,23 @@
 {
   "path": "/",
   "type": "d",
+  "permissions": "r--",
   "children": [
     {
       "path": "/bin",
       "type": "d",
+      "permissions": "r-x",
       "children": []
     },
     {
       "path": "/var",
       "type": "d",
+      "permissions": "r--",
       "children": [
         {
           "path": "/var/logs",
           "type": "d",
+          "permissions": "rw-",
           "children": []
         }
       ]
@@ -21,29 +25,35 @@
     {
       "path": "/home",
       "type": "d",
+      "permissions": "rw-",
       "children": [
         {
           "path": "/home/UserXYZ",
           "type": "d",
+          "permissions": "rwx",
           "children": [
             {
               "path": "/home/UserXYZ/Desktop",
               "type": "d",
+              "permissions": "rwx",
               "children": []
             },
             {
               "path": "/home/UserXYZ/Documents",
               "type": "d",
+              "permissions": "rwx",
               "children": []
             },
             {
               "path": "/home/UserXYZ/Pictures",
               "type": "d",
+              "permissions": "rwx",
               "children": []
             },
             {
               "path": "/home/UserXYZ/Applications",
               "type": "d",
+              "permissions": "rwx",
               "children": []
             }
           ]
@@ -53,6 +63,7 @@
     {
       "path": "/etc",
       "type": "d",
+      "permissions": "r--",
       "children": []
     }
   ]
