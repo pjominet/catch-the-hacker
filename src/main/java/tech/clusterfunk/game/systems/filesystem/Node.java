@@ -4,16 +4,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import tech.clusterfunk.util.NodeTypeDeserializer;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class Node {
     private Node parent;
     private List<Node> children;
-    private String path;
+    private String name;
     private NodeType type;
     private String permissions;
 
     public Node() {
+        children = new LinkedList<>();
     }
 
     public Node getParent() {
@@ -32,12 +34,12 @@ public class Node {
         this.children = children;
     }
 
-    public String getPath() {
-        return path;
+    public String getName() {
+        return name;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public NodeType getType() {
@@ -60,6 +62,6 @@ public class Node {
 
     @Override
     public String toString() {
-        return path;
+        return name;
     }
 }

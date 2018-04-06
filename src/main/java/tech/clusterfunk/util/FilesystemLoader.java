@@ -1,57 +1,34 @@
 package tech.clusterfunk.util;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 import tech.clusterfunk.game.systems.filesystem.Node;
-
-import java.io.IOException;
-import java.util.Iterator;
+import tech.clusterfunk.game.systems.filesystem.NodeType;
 
 import static tech.clusterfunk.Main.CONFIG_ROOT;
 
 public class FilesystemLoader {
 
-    public static Node parseTree(String osName) throws IOException {
+    public static Node parseFileSystem(String osName) {
         String config = CONFIG_ROOT + osName + "_FS.json";
-        ObjectMapper mapper = new ObjectMapper();
 
-        JsonNode root = mapper.readTree(FilesystemLoader.class.getResourceAsStream(config));
+        JSONTokener tokener = new JSONTokener(FilesystemLoader.class.getResourceAsStream(config));
+        JSONObject root = new JSONObject(tokener);
 
-        //printTree(root);
-
-        return mapper.convertValue(root, Node.class);
+        return buildTree(root);
     }
 
-    private static void printTree(JsonNode parentNode) {
-        if (parentNode.isArray()) {
+    private static Node buildTree(JSONObject current) {
+        Node node = new Node();
+        node.setName(current.getString("name"));
+        node.setType(NodeType.fromAbbreviation(current.getString("type")));
+        node.setPermissions(current.getString("permissions"));
 
-            Iterator<JsonNode> iter = parentNode.elements();
-
-            while (iter.hasNext()) {
-                JsonNode node = iter.next();
-
-                if (node.isObject() || node.isArray()) {
-                    printTree(node);
-                } else {
-                    System.out.print(node.asText());
-                }
-            }
-
-        }
-        if (parentNode.isObject()) {
-            Iterator<String> iter = parentNode.fieldNames();
-
-            while (iter.hasNext()) {
-                String nodeName = iter.next();
-                JsonNode node = parentNode.path(nodeName);
-
-                if (nodeName.equals("path"))
-                    System.out.println(node.asText());
-
-                if (node.isObject() || node.isArray()) {
-                    printTree(node);
-                }
-            }
-        }
+        current.getJSONArray("children").forEach(jsonChild -> {
+            Node child = buildTree((JSONObject) jsonChild);
+            node.getChildren().add(child);
+            child.setParent(node);
+        });
+        return node;
     }
 }
