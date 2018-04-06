@@ -1,7 +1,7 @@
 package tech.clusterfunk.game.characters;
 
 import tech.clusterfunk.game.network.Computer;
-import tech.clusterfunk.util.IOHandler;
+import tech.clusterfunk.util.CommandLoader;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,7 +21,7 @@ public class NPC extends Character {
         int lineNbr = 0;
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(
-                        IOHandler.class.getResourceAsStream(config),
+                        CommandLoader.class.getResourceAsStream(config),
                         StandardCharsets.UTF_8
                 )
         )) {

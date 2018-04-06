@@ -2,7 +2,7 @@ package tech.clusterfunk.game.characters;
 
 import tech.clusterfunk.game.network.Computer;
 import tech.clusterfunk.game.systems.Command;
-import tech.clusterfunk.util.IOHandler;
+import tech.clusterfunk.util.CommandLoader;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ public class Player extends Character implements Hacker {
 
     public Player(String name, Computer computer) {
         super(name, computer);
-        this.commandList = IOHandler.loadDefaultCommands();
+        this.commandList = CommandLoader.loadDefaultCommands();
     }
 
     public String listCommands(String os) {

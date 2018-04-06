@@ -3,13 +3,9 @@ package tech.clusterfunk.util;
 import tech.clusterfunk.game.systems.Command;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -18,7 +14,7 @@ import java.util.regex.Pattern;
 
 import static tech.clusterfunk.Main.CONFIG_ROOT;
 
-public class IOHandler {
+public class CommandLoader {
 
     public static List<Command> loadCommandSet(String os) {
         String config = CONFIG_ROOT + os + "_CMD.cnf";
@@ -26,7 +22,7 @@ public class IOHandler {
         List<Command> commandSet = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(
-                        IOHandler.class.getResourceAsStream(config),
+                        CommandLoader.class.getResourceAsStream(config),
                         StandardCharsets.UTF_8))
         ) {
             Pattern regex = Pattern.compile(pattern);
@@ -53,7 +49,7 @@ public class IOHandler {
         List<Command> defaultCommands = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(
-                        IOHandler.class.getResourceAsStream(config),
+                        CommandLoader.class.getResourceAsStream(config),
                         StandardCharsets.UTF_8))
         ) {
             Pattern regex = Pattern.compile(pattern);
@@ -80,34 +76,5 @@ public class IOHandler {
             System.exit(1);
         }
         return defaultCommands;
-    }
-
-    public static void writeToTextFile(String writable, String path) {
-        int tries = 0;
-        while (true) {
-            try {
-                Files.createFile(Paths.get(path));
-                try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(path),
-                        StandardCharsets.UTF_8, StandardOpenOption.WRITE)) {
-                    writer.write(writable);
-                    writer.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } catch (IOException e) {
-                if (++tries == 3) {
-                    System.err.println("File already exists, no writing occurred");
-                    System.exit(1);
-                } else {
-                    try {
-                        Files.delete(Paths.get(path));
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                        System.exit(1);
-                    }
-                }
-            }
-        }
-
     }
 }

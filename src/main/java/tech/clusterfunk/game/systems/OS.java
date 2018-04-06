@@ -1,41 +1,30 @@
 package tech.clusterfunk.game.systems;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import tech.clusterfunk.game.systems.filesystem.Node;
-import tech.clusterfunk.util.IOHandler;
+import tech.clusterfunk.util.FilesystemLoader;
+import tech.clusterfunk.util.CommandLoader;
 
 import java.io.IOException;
 import java.util.List;
-
-import static tech.clusterfunk.Main.CONFIG_ROOT;
 
 public class OS {
     private String name;
     private List<Command> commandSet;
     private Node fileSystem;
 
-    private Node loadFS() {
-        String config = CONFIG_ROOT + name + "_FS.json";
-        ObjectMapper mapper = new ObjectMapper();
-
-        JsonNode jsonNode;
-        Node root = null;
+    private void loadFS(String osName) {
         try {
-            jsonNode = mapper.readTree(this.getClass().getResourceAsStream(config));
-            root = mapper.convertValue(jsonNode, Node.class);
+            fileSystem = FilesystemLoader.parseTree(osName);
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
         }
-
-        return root;
     }
 
     public OS(String name) {
         this.name = name;
-        commandSet = IOHandler.loadCommandSet(name);
-        this.fileSystem = loadFS();
+        commandSet = CommandLoader.loadCommandSet(name);
+        loadFS(name);
     }
 
     public String getName() {
