@@ -54,12 +54,12 @@ public class Game {
         out.println(player.listCommands("DOORS"));
         out.println(player.listCommands("LOONIX"));
         out.println(player.listCommands("OSY"));
-        out.println(player.getComputer().getOs().showFS());
+        //out.println(player.getComputer().getOs().showFS());
         out.print("\n");
         out.println("--- Hacker stats ---", Attribute.BOLD, FColor.CYAN, BColor.BLACK);
         out.clear();
         out.println(blackhat.toString());
-        out.println(blackhat.getComputer().getOs().showFS());
+        //out.println(blackhat.getComputer().getOs().showFS());
         out.print("\n");
         out.println("--- Network map ---", Attribute.BOLD, FColor.CYAN, BColor.BLACK);
         out.clear();

@@ -1,9 +1,7 @@
 package tech.clusterfunk.game.systems.filesystem;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import tech.clusterfunk.util.NodeParentDeserializer;
 import tech.clusterfunk.util.NodeTypeDeserializer;
 
 import java.util.List;
@@ -13,19 +11,15 @@ public class Node {
     private List<Node> children;
     private String path;
     private NodeType type;
-    @JsonIgnore
     private String permissions;
 
     public Node() {
-        this.permissions = "r-w";
     }
 
     public Node getParent() {
         return parent;
     }
 
-    // TODO: not working, check
-    @JsonDeserialize(using = NodeParentDeserializer.class)
     public void setParent(Node parent) {
         this.parent = parent;
     }
