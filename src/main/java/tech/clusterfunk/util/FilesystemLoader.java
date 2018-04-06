@@ -17,7 +17,7 @@ public class FilesystemLoader {
 
         JsonNode root = mapper.readTree(FilesystemLoader.class.getResourceAsStream(config));
 
-        printTree(root);
+        //printTree(root);
 
         return mapper.convertValue(root, Node.class);
     }
@@ -46,7 +46,7 @@ public class FilesystemLoader {
                 JsonNode node = parentNode.path(nodeName);
 
                 if (nodeName.equals("path"))
-                System.out.println(node.asText());
+                    System.out.println(node.asText());
 
                 if (node.isObject() || node.isArray()) {
                     printTree(node);

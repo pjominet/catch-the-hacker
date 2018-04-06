@@ -58,26 +58,8 @@ public class Node {
         this.permissions = permissions;
     }
 
-    public String getPathToCurrentNode() {
-        StringBuilder builder = new StringBuilder();
-        if (parent != null) {
-            builder.append(getPathToCurrentNode());
-            builder.append(parent.getPath());
-        }
-        builder.append(this.path);
-        return builder.toString();
-    }
-
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("path=").append(path)
-                .append(", type=").append(type)
-                .append(", permissions=").append(permissions);
-        if (!children.isEmpty())
-            builder.append("\nchildren=").append(children);
-        if (parent != null)
-            builder.append(", parent=").append(parent.getPath());
-        return builder.toString();
+        return path;
     }
 }

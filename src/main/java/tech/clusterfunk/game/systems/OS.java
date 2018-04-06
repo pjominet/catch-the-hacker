@@ -10,11 +10,11 @@ import java.util.List;
 public class OS {
     private String name;
     private List<Command> commandSet;
-    private Node fileSystem;
+    private Node fileSystemPosition;
 
     private void loadFS(String osName) {
         try {
-            fileSystem = FilesystemLoader.parseTree(osName);
+            fileSystemPosition = FilesystemLoader.parseTree(osName);
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
@@ -35,20 +35,42 @@ public class OS {
         return commandSet;
     }
 
-    public String showFS() {
-        return fileSystem.toString();
+    public Node getFileSystemPosition() {
+        return fileSystemPosition;
     }
 
-    public String getCurrentFSNode() {
-        return fileSystem.getPathToCurrentNode();
+    public void setFileSystemPosition(Node fileSystemPosition) {
+        this.fileSystemPosition = fileSystemPosition;
     }
 
-    public Command getCommand(String cmdName) {
-        for (Command command : commandSet) {
-            if (cmdName.equals(command.getName())) {
-                return command;
+    // TODO: review, should always print whole FS not part of it
+    public void printFileSystem(Node current) {
+        System.out.println(current.getPath());
+        if (!current.getChildren().isEmpty()) {
+            for (Node child : current.getChildren()) {
+                printFileSystem(child);
             }
         }
-        return null;
+    }
+
+    public boolean hasCommand(String cmdName) {
+        boolean found = false;
+        for (Command command: commandSet) {
+            found = cmdName.equals(command.getName());
+            if (found) break;
+        }
+        return found;
+    }
+
+    // TODO: not working as intended
+    public Node changeDirectory(String path, Node current) {
+        if (!current.getPath().contains(path)) {
+            if (!current.getChildren().isEmpty()) {
+                for (Node child: current.getChildren()) {
+                    current = changeDirectory(path, child);
+                }
+            }
+        }
+        return current;
     }
 }
