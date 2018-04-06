@@ -28,7 +28,7 @@ public class Computer {
     private OS randomOS() {
         OS os;
         Random rnd = new Random(System.currentTimeMillis());
-        int result = rnd.nextInt(2);
+        int result = rnd.nextInt(3);
         if (result == 0) os = new OS("DOORS");
         else if (result == 1) os = new OS("OSY");
         else os = new OS("LOONIX");
