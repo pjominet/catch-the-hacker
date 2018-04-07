@@ -62,15 +62,15 @@ public class OS {
 
     private List<String> getDirectoriesToRoot() {
         Node current = fileSystemPosition;
-        List<String> pathNames = new ArrayList<>();
+        List<String> directoryNames = new ArrayList<>();
         while (current.getParent() != null) {
-            pathNames.add(current.getName());
+            directoryNames.add(current.getName());
             current = current.getParent();
         }
-        pathNames.add(current.getName());
+        directoryNames.add(current.getName());
 
-        Collections.reverse(pathNames);
-        return pathNames;
+        Collections.reverse(directoryNames);
+        return directoryNames;
     }
 
     public String getCurrentPath() {

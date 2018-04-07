@@ -34,9 +34,7 @@ public class CommandLoader {
                     commandSet.add(new Command(m.group(1), params, m.group(2), os));
                 }
             }
-            reader.close();
         } catch (IOException e) {
-            //e.printStackTrace();
             System.err.println("File not found: " + config);
             System.exit(1);
         }
@@ -69,9 +67,7 @@ public class CommandLoader {
                     }
                 }
             }
-            reader.close();
         } catch (IOException e) {
-            //e.printStackTrace();
             System.err.println("File not found: " + config);
             System.exit(1);
         }
