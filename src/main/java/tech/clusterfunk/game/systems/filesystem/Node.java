@@ -1,9 +1,5 @@
 package tech.clusterfunk.game.systems.filesystem;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import tech.clusterfunk.util.NodeTypeDeserializer;
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -46,8 +42,6 @@ public class Node {
         return type;
     }
 
-    @JsonProperty("type")
-    @JsonDeserialize(using = NodeTypeDeserializer.class)
     public void setType(NodeType type) {
         this.type = type;
     }
