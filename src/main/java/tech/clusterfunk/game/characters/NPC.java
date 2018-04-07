@@ -29,9 +29,7 @@ public class NPC extends Character {
                 userName = line;
                 if (lineNbr++ == userId) break;
             }
-            reader.close();
         } catch (IOException e) {
-            //e.printStackTrace();
             System.err.println("User list not found: " + config);
         }
         return userName;

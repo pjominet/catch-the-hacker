@@ -2,7 +2,6 @@ package tech.clusterfunk.game.characters;
 
 import tech.clusterfunk.game.network.Computer;
 import tech.clusterfunk.game.systems.Command;
-import tech.clusterfunk.game.systems.OS;
 import tech.clusterfunk.util.CommandLoader;
 
 import java.util.ArrayList;
@@ -29,7 +28,7 @@ public class Player extends Character implements Hacker {
     public List<Command> getAvailableCommands() {
         List<Command> availableCommands = new ArrayList<>();
         for (Command command: commandList) {
-            if (command.getOs().equals(this.computer.getOs().getName()))
+            if (command.getOs().equals(this.computer.getOS().getName()))
                 availableCommands.add(command);
         }
         return availableCommands;
@@ -55,7 +54,7 @@ public class Player extends Character implements Hacker {
         this.computer = computer;
     }
 
-    public void changeOS(String os) {
-        this.computer.installNewOS(os);
+    public void changeOS(String os, String user) {
+        this.computer.installNewOS(os, user);
     }
 }

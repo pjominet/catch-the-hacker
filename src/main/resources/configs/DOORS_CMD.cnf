@@ -1,5 +1,4 @@
 dir::list files on current path
-users::list all active users
 chdir:path:change to given directory
 copy:source,destination:copy source to destination
 del:fileSystem:delete given fileSystem

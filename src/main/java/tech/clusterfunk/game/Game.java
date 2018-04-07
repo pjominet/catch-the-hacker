@@ -81,14 +81,14 @@ public class Game {
 
         init("Patrick", "DOORS", "blyatrick");
 
-        OS playerOS = player.getComputer().getOs();
+        OS playerOS = player.getComputer().getOS();
         System.out.println();
 
         out.println("--- Player stats ---", Attribute.BOLD, FColor.CYAN, BColor.BLACK);
         out.clear();
         out.println(player.toString());
         // change to home directory
-        playerOS.changeDirectory("UserXYZ", playerOS.getFileSystemPosition());
+        playerOS.changeDirectory("~", playerOS.getFileSystemPosition());
         // simulate command prompt at current FS position
         out.println(playerOS.getCurrentPath() + " > ");
         // list child directories
@@ -142,9 +142,9 @@ public class Game {
         init(name, os, nick);
 
         out.print("\nAs installer finishes, you are being greeted by the welcome screen of " +
-                player.getComputer().getOs().getName() + ".\n"
+                player.getComputer().getOS().getName() + ".\n"
                 + "You launch the terminal and newGame working...\n");
-        System.out.print("\n" + player.getComputer().getOs().getFileSystemPosition() + " > ");
+        System.out.print("\n" + player.getComputer().getOS().getFileSystemPosition() + " > ");
         String command = in.next();
 
         out.clear();

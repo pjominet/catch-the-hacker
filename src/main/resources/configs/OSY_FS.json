@@ -28,7 +28,7 @@
       "permissions": "rw-",
       "children": [
         {
-          "name": "UserXYZ",
+          "name": "NewUser",
           "type": "d",
           "permissions": "rwx",
           "children": [

@@ -12,15 +12,23 @@ public class OS {
     private String name;
     private List<Command> commandSet;
     private Node fileSystemPosition;
+    private String user;
 
     private void loadFS(String osName) {
         fileSystemPosition = FilesystemLoader.parseFileSystem(osName);
     }
 
-    public OS(String name) {
+    private void setCorrectUserHomeFolder(Node current) {
+        if (current.getName().equals("NewUser")) current.setName(user);
+        else current.getChildren().forEach(this::setCorrectUserHomeFolder);
+    }
+
+    public OS(String name, String user) {
         this.name = name;
         commandSet = CommandLoader.loadCommandSet(name);
         loadFS(name);
+        this.user = user;
+        setCorrectUserHomeFolder(fileSystemPosition);
     }
 
     public String getName() {
@@ -39,6 +47,10 @@ public class OS {
         this.fileSystemPosition = fileSystemPosition;
     }
 
+    public String getUser() {
+        return user;
+    }
+
     public boolean hasCommand(String cmdName) {
         boolean found = false;
         for (Command command : commandSet) {
@@ -48,10 +60,10 @@ public class OS {
         return found;
     }
 
-    public List<String> getDirectoriesToRoot() {
+    private List<String> getDirectoriesToRoot() {
         Node current = fileSystemPosition;
         List<String> pathNames = new ArrayList<>();
-        while(current.getParent() != null) {
+        while (current.getParent() != null) {
             pathNames.add(current.getName());
             current = current.getParent();
         }
@@ -77,8 +89,11 @@ public class OS {
         current.getChildren().forEach(this::listDirectories);
     }
 
-    public void changeDirectory(String dir, Node current) {
-        if (current.getName().contains(dir)) fileSystemPosition = current;
-        else current.getChildren().forEach(child -> changeDirectory(dir, child));
+    public void changeDirectory(String directory, Node current) {
+        if (directory.equals("..")) fileSystemPosition = current.getParent();
+        else if (current.getName().equals(directory) ||
+                (directory.equals("~") && current.getName().equals(user)))
+            fileSystemPosition = current;
+        else current.getChildren().forEach(child -> changeDirectory(directory, child));
     }
 }

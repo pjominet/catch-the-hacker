@@ -11,7 +11,6 @@ public class Computer {
     private OS os;
     private int accessLevel;
     private int crytoCoins;
-    private String user;
 
     private String randomIPAddress() {
         int min = 1;
@@ -25,20 +24,19 @@ public class Computer {
         return joiner.toString();
     }
 
-    private OS randomOS() {
+    private OS randomOS(String user) {
         OS os;
         Random rnd = new Random(System.currentTimeMillis());
         int result = rnd.nextInt(3);
-        if (result == 0) os = new OS("DOORS");
-        else if (result == 1) os = new OS("OSY");
-        else os = new OS("LOONIX");
+        if (result == 0) os = new OS("DOORS", user);
+        else if (result == 1) os = new OS("OSY", user);
+        else os = new OS("LOONIX", user);
         return os;
     }
 
     public Computer(String user) {
         this.ip = randomIPAddress();
-        this.os = randomOS();
-        this.user = user;
+        this.os = randomOS(user);
 
         Random rnd = new Random(System.currentTimeMillis());
         this.accessLevel = rnd.nextInt(4) + 1;
@@ -47,13 +45,12 @@ public class Computer {
 
     public Computer(String osName, int accessLevel, String user) {
         this.ip = randomIPAddress();
-        this.os = new OS(osName);
+        this.os = new OS(osName, user);
         this.accessLevel = accessLevel;
         this.crytoCoins = 0;
-        this.user = user;
     }
 
-    public String getIp() {
+    public String getIP() {
         return ip;
     }
 
@@ -65,21 +62,16 @@ public class Computer {
         return accessLevel;
     }
 
-    public OS getOs() {
+    public OS getOS() {
         return os;
     }
 
-    public String getUser() {
-        return user;
-    }
-
-    public void installNewOS(String osName) {
-        this.os = new OS(osName);
+    public void installNewOS(String osName, String user) {
+        this.os = new OS(osName, user);
     }
 
     @Override
     public String toString() {
-        return "OS: " + os.getName() + ", IP: " + ip + ", USER: " + user +
-                ", access level: " + accessLevel + ", crypto coins: " + crytoCoins;
+        return "OS: " + os.getName() + ", IP: " + ip + ", access level: " + accessLevel + ", crypto coins: " + crytoCoins;
     }
 }

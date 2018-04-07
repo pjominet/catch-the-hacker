@@ -27,13 +27,13 @@ public class Network {
     private void generateAddressList() {
         addressList = new ArrayList<>();
         for (Computer computer : network) {
-            addressList.add(computer.getIp());
+            addressList.add(computer.getIP());
         }
     }
 
     public void addComputer(Computer computer) {
         network.add(computer);
-        addressList.add(computer.getIp());
+        addressList.add(computer.getIP());
     }
 
     // TODO implement custom invalid address exception
@@ -41,7 +41,7 @@ public class Network {
         Computer found = null;
         if (ip.matches("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}")) {
             for (Computer computer : network) {
-                if (computer.getIp().equals(ip))
+                if (computer.getIP().equals(ip))
                     found = computer;
             }
         }
