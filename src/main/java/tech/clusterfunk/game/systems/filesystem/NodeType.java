@@ -1,9 +1,5 @@
 package tech.clusterfunk.game.systems.filesystem;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-@JsonFormat(shape=JsonFormat.Shape.OBJECT)
 public enum NodeType {
     FILE("f"),
     DIRECTORY("d");
@@ -14,7 +10,6 @@ public enum NodeType {
         this.abbreviation = abbreviation;
     }
 
-    @JsonProperty("abbreviation")
     public String getAbbreviation() {
         return abbreviation;
     }
