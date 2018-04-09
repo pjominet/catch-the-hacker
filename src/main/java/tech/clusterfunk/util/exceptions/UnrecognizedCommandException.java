@@ -1,14 +1,14 @@
 package tech.clusterfunk.util.exceptions;
 
-public class CommandDoesNotExistException extends Exception {
+public class UnrecognizedCommandException extends Exception {
 
     private String message;
 
-    public CommandDoesNotExistException(String message) {
+    public UnrecognizedCommandException(String message) {
         this.message = message;
     }
 
-    public CommandDoesNotExistException(String message, Throwable cause) {
+    public UnrecognizedCommandException(String message, Throwable cause) {
         super(cause);
         this.message = message;
     }

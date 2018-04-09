@@ -3,7 +3,7 @@ package tech.clusterfunk.game.characters;
 import tech.clusterfunk.game.network.Computer;
 import tech.clusterfunk.game.systems.Command;
 import tech.clusterfunk.util.CommandLoader;
-import tech.clusterfunk.util.exceptions.CommandDoesNotExistException;
+import tech.clusterfunk.util.exceptions.UnrecognizedCommandException;
 
 import java.util.List;
 import java.util.Map;
@@ -42,10 +42,10 @@ public class Player extends Character implements Hacker {
         return availableCommands;
     }
 
-    public Command useCommand(String cmdName) throws CommandDoesNotExistException {
+    public Command useCommand(String cmdName) throws UnrecognizedCommandException {
         Command command = getAvailableCommands().get(cmdName);
         if (command != null) return command;
-        else throw new CommandDoesNotExistException(cmdName + " is not recognized as an internal command.");
+        else throw new UnrecognizedCommandException(cmdName + " is not recognized as an internal command.");
     }
 
     public void learnCommand(Command cmd) {
