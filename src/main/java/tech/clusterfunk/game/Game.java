@@ -10,6 +10,7 @@ import tech.clusterfunk.game.network.Computer;
 import tech.clusterfunk.game.network.Network;
 import tech.clusterfunk.game.systems.OS;
 import tech.clusterfunk.util.CommandLoader;
+import tech.clusterfunk.util.exceptions.FatalException;
 import tech.clusterfunk.util.exceptions.InvalidIPException;
 import tech.clusterfunk.util.exceptions.UnknownIPException;
 
@@ -106,9 +107,13 @@ public class Game {
         System.out.print("Find Computer: ");
         String ip = in.next();
         try {
-            out.println(network.findComputerAt(ip).toString());
-        } catch (UnknownIPException | InvalidIPException e) {
+            out.println(network.getComputerByIP(ip).toString());
+        } catch (InvalidIPException | UnknownIPException e) {
             System.err.println(e.getMessage());
+        } catch (FatalException e) {
+            System.err.println(e.getMessage());
+            e.printStackTrace();
+            System.exit(1);
         }
 
         out.clear();
