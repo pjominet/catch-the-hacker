@@ -4,7 +4,7 @@ import com.diogonunes.jcdp.color.ColoredPrinter;
 import com.diogonunes.jcdp.color.api.Ansi.Attribute;
 import com.diogonunes.jcdp.color.api.Ansi.BColor;
 import com.diogonunes.jcdp.color.api.Ansi.FColor;
-import tech.clusterfunk.game.characters.Blackhat;
+import tech.clusterfunk.game.characters.Hacker;
 import tech.clusterfunk.game.characters.Player;
 import tech.clusterfunk.game.network.Computer;
 import tech.clusterfunk.game.network.Network;
@@ -28,7 +28,7 @@ public class Game {
     private int difficulty;
 
     private Player player;
-    private Blackhat blackhat;
+    private Hacker hacker;
     private Network network;
 
     private ColoredPrinter out;
@@ -65,14 +65,14 @@ public class Game {
         Computer playerPC = new Computer(playerOs, playerNick, Integer.valueOf(initConfig.get("player_protection")));
         player = new Player(playerName, playerPC, Integer.valueOf(initConfig.get("player_skill")));
 
-        Computer blackhatPC = new Computer(initConfig.get("blackhat_os"),
+        Computer hackerPC = new Computer(initConfig.get("blackhat_os"),
                 initConfig.get("blackhat_nick"),
                 Integer.valueOf(initConfig.get("blackhat_diff"))
         );
-        blackhat = new Blackhat(initConfig.get("blackhat_name"), blackhatPC);
+        hacker = new Hacker(initConfig.get("blackhat_name"), hackerPC);
 
         network = new Network(Integer.valueOf(initConfig.get("network_size")));
-        network.addComputer(blackhatPC);
+        network.addComputer(hackerPC);
         network.addComputer(playerPC);
 
         /*
@@ -107,7 +107,7 @@ public class Game {
         out.print("\n");
         out.println("--- Hacker stats ---", Attribute.BOLD, FColor.CYAN, BColor.BLACK);
         out.clear();
-        out.println(blackhat.toString());
+        out.println(hacker.toString());
         out.print("\n");
         out.println("--- Network map ---", Attribute.BOLD, FColor.CYAN, BColor.BLACK);
         out.clear();
