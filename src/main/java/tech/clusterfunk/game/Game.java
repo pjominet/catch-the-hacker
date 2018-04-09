@@ -106,8 +106,7 @@ public class Game {
         System.out.print("Find Computer: ");
         String ip = in.next();
         try {
-            Computer computer = network.findComputerAt(ip);
-            out.println(computer.toString());
+            out.println(network.findComputerAt(ip).toString());
         } catch (UnknownIPException | InvalidIPException e) {
             System.err.println(e.getMessage());
         }
@@ -119,8 +118,9 @@ public class Game {
         out.println("=== Catch The Hacker ===\n", Attribute.BOLD, FColor.MAGENTA, BColor.BLACK);
         out.clear();
 
-        String lastCmd = newGame();
-        out.println("Last given command: " + lastCmd);
+        String lastInput = newGame();
+        out.println("Last given input: " + lastInput);
+
         in.close();
     }
 
