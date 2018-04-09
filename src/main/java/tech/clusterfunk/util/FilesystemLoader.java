@@ -10,7 +10,7 @@ import static tech.clusterfunk.Main.CONFIG_ROOT;
 public class FilesystemLoader {
 
     public static Node parseFileSystem(String osName) {
-        String config = CONFIG_ROOT + osName + "_FS.json";
+        String config = CONFIG_ROOT + osName.toLowerCase() + "_fs.json";
 
         JSONTokener tokener = new JSONTokener(FilesystemLoader.class.getResourceAsStream(config));
         JSONObject root = new JSONObject(tokener);

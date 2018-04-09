@@ -16,7 +16,7 @@ public class NPC extends Character {
 
     // TODO: add custom exception exception when no username could be loaded
     private String loadGenericUserName(int userId) {
-        String config = CONFIG_ROOT + "USERS.txt";
+        String config = CONFIG_ROOT + "users.list";
         String userName = "";
         int lineNbr = 0;
         try (BufferedReader reader = new BufferedReader(

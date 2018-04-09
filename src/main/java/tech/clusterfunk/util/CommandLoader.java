@@ -17,7 +17,7 @@ import static tech.clusterfunk.Main.CONFIG_ROOT;
 public class CommandLoader {
 
     public static List<Command> loadCommandSet(String os) {
-        String config = CONFIG_ROOT + os + "_CMD.cnf";
+        String config = CONFIG_ROOT + os.toLowerCase() + "_cs.config";
         String pattern = "([a-z]+):(.*):(.+)";
         List<Command> commandSet = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(
@@ -42,7 +42,7 @@ public class CommandLoader {
     }
 
     public static List<Command> loadDefaultCommands() {
-        String config = CONFIG_ROOT + "PLAYER_CMD.cnf";
+        String config = CONFIG_ROOT + "player_defaults.config";
         String pattern = "([A-Z]+):(.*)";
         List<Command> defaultCommands = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(
