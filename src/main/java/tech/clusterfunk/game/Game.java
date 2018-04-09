@@ -25,6 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import static tech.clusterfunk.Main.CONFIG_ROOT;
 
 public class Game {
+    private int difficulty;
 
     private Player player;
     private Blackhat blackhat;
@@ -61,17 +62,25 @@ public class Game {
     private void init(String playerName, String playerOs, String playerNick) {
         System.out.println(">> Setting up game...");
 
-        Computer playerPC = new Computer(playerOs, 1, playerNick);
-        player = new Player(playerName, playerPC);
+        Computer playerPC = new Computer(playerOs, playerNick, Integer.valueOf(initConfig.get("player_protection")));
+        player = new Player(playerName, playerPC, Integer.valueOf(initConfig.get("player_skill")));
 
         Computer blackhatPC = new Computer(initConfig.get("blackhat_os"),
-                Integer.valueOf(initConfig.get("blackhat_diff")),
-                initConfig.get("blackhat_nick"));
+                initConfig.get("blackhat_nick"),
+                Integer.valueOf(initConfig.get("blackhat_diff"))
+        );
         blackhat = new Blackhat(initConfig.get("blackhat_name"), blackhatPC);
 
         network = new Network(Integer.valueOf(initConfig.get("network_size")));
         network.addComputer(blackhatPC);
         network.addComputer(playerPC);
+
+        /*
+        System.out.print("\n>> Please select game difficulty (0=easy, 1=medium, 2=hard): ");
+        this.difficulty = in.nextInt();
+        */
+        // for debugging automation
+        this.difficulty = 0;
 
         System.out.println(">> Done!");
     }

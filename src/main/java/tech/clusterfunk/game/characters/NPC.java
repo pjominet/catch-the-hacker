@@ -12,9 +12,8 @@ import java.util.Random;
 import static tech.clusterfunk.Main.CONFIG_ROOT;
 
 public class NPC extends Character {
-    private int awareness;
+    int wallet;
 
-    // TODO: add custom exception exception when no username could be loaded
     private String loadGenericUserName(int userId) {
         String config = CONFIG_ROOT + "users.list";
         String userName = "";
@@ -40,24 +39,24 @@ public class NPC extends Character {
         this.name = loadGenericUserName(userID);
         this.computer = new Computer(this.name);
         Random rnd = new Random(System.currentTimeMillis());
-        this.awareness = rnd.nextInt(5 - 1) + 1;
+        this.wallet = rnd.nextInt(90) + 10;
     }
 
-    NPC(String name, Computer computer, int awareness) {
+    NPC(String name, Computer computer, int wallet) {
         super(name, computer);
-        this.awareness = awareness;
+        this.wallet = wallet;
     }
 
-    public int getAwareness() {
-        return awareness;
+    public int getWallet() {
+        return wallet;
     }
 
-    public void setAwareness(int awareness) {
-        this.awareness = awareness;
+    public void setWallet(int wallet) {
+        this.wallet = wallet;
     }
 
     @Override
     public String toString() {
-        return "NAME=" + name + ", PC=(" + computer + "), AWARENESS=" + awareness;
+        return "NAME=" + name + ", PC=(" + computer + "), WALLET: " + wallet;
     }
 }

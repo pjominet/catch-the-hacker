@@ -9,8 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class Player extends Character implements Hacker {
+public class Player extends Character {
     private Map<String, Command> knownCommands;
+    private int skill;
 
     private void initDefaultCommands() {
         List<Command> defaults = CommandLoader.loadDefaultCommands();
@@ -18,8 +19,9 @@ public class Player extends Character implements Hacker {
         defaults.forEach(command -> knownCommands.put(command.getName(), command));
     }
 
-    public Player(String name, Computer computer) {
+    public Player(String name, Computer computer, int skill) {
         super(name, computer);
+        this.skill = skill;
         initDefaultCommands();
     }
 
@@ -52,12 +54,7 @@ public class Player extends Character implements Hacker {
         knownCommands.put(cmd.getName(), cmd);
     }
 
-    @Override
-    public void hack(Computer computer) {
-        this.computer = computer;
-    }
-
     public void changeOS(String os, String user) {
-        this.computer.installNewOS(os, user);
+        this.computer.installNewOS(os, user, skill);
     }
 }

@@ -9,8 +9,6 @@ import java.util.StringJoiner;
 public class Computer {
     private String ip;
     private OS os;
-    private int accessLevel;
-    private int crytoCoins;
 
     private String randomIPAddress() {
         int min = 1;
@@ -25,53 +23,40 @@ public class Computer {
     }
 
     private OS randomOS(String user) {
-        OS os;
         Random rnd = new Random(System.currentTimeMillis());
-        int result = rnd.nextInt(3);
-        if (result == 0) os = new OS("DOORS", user);
-        else if (result == 1) os = new OS("OSY", user);
-        else os = new OS("LOONIX", user);
-        return os;
+        int osChoice = rnd.nextInt(3);
+        int minDifficultyModifier = 1;
+        int accessLevel = rnd.nextInt(4) + minDifficultyModifier;
+
+        if (osChoice == 0) return new OS("DOORS", user, accessLevel);
+        else if (osChoice == 1) return new OS("OSY", user, accessLevel);
+        else return new OS("LOONIX", user, accessLevel);
     }
 
     public Computer(String user) {
         this.ip = randomIPAddress();
         this.os = randomOS(user);
-
-        Random rnd = new Random(System.currentTimeMillis());
-        this.accessLevel = rnd.nextInt(4) + 1;
-        this.crytoCoins = rnd.nextInt(90) + 10;
     }
 
-    public Computer(String osName, int accessLevel, String user) {
+    public Computer(String osName, String user, int accessLevel) {
         this.ip = randomIPAddress();
-        this.os = new OS(osName, user);
-        this.accessLevel = accessLevel;
-        this.crytoCoins = 0;
+        this.os = new OS(osName, user, accessLevel);
     }
 
     public String getIP() {
         return ip;
     }
 
-    public int getCrytoCoins() {
-        return crytoCoins;
-    }
-
-    public int getAccessLevel() {
-        return accessLevel;
-    }
-
     public OS getOS() {
         return os;
     }
 
-    public void installNewOS(String osName, String user) {
-        this.os = new OS(osName, user);
+    public void installNewOS(String osName, String user, int accessLevel) {
+        this.os = new OS(osName, user, accessLevel);
     }
 
     @Override
     public String toString() {
-        return "OS: " + os.getName() + ", IP: " + ip + ", access level: " + accessLevel + ", crypto coins: " + crytoCoins;
+        return "OS: " + os.getName() + ", IP: " + ip;
     }
 }

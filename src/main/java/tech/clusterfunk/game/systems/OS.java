@@ -19,6 +19,7 @@ public class OS {
     private Map<String, Command> commandSet;
     private Node fileSystemPosition;
     private String user;
+    private int accessLevel;
 
     private void loadFS(String osName) {
         fileSystemPosition = FilesystemLoader.parseFileSystem(osName);
@@ -30,9 +31,10 @@ public class OS {
         set.forEach(command -> commandSet.put(command.getName(), command));
     }
 
-    public OS(String name, String user) {
+    public OS(String name, String user, int accessLevel) {
         this.name = name;
         this.user = user;
+        this.accessLevel = accessLevel;
         loadCS(this.name);
         loadFS(this.name);
         setCorrectUserHomeFolder(this.fileSystemPosition);
@@ -72,6 +74,14 @@ public class OS {
         return user;
     }
 
+    public int getAccessLevel() {
+        return accessLevel;
+    }
+
+    public void setAccessLevel(int accessLevel) {
+        this.accessLevel = accessLevel;
+    }
+
     public boolean hasCommand(String cmdName) {
         return commandSet.get(cmdName) != null;
     }
@@ -100,14 +110,20 @@ public class OS {
         current.getChildren().forEach(this::listChildren);
     }
 
+    private boolean isPermitted(Node node, String permission) {
+        return node.getPermissions().contains(permission);
+    }
+
     public void changeDirectory(String directory, Node current) {
         if (current.getType() == NodeType.DIRECTORY) {
-            if (directory.equals("..")) fileSystemPosition = current.getParent();
-            else if (current.getName().equals(directory) ||
-                    (directory.equals("~") && current.getName().equals(user)))
-                fileSystemPosition = current;
-            else current.getChildren().forEach(child -> changeDirectory(directory, child));
-        }
+            if(isPermitted(current, "r")) {
+                if (directory.equals("..")) fileSystemPosition = current.getParent();
+                else if (current.getName().equals(directory) ||
+                        (directory.equals("~") && current.getName().equals(user)))
+                    fileSystemPosition = current;
+                else current.getChildren().forEach(child -> changeDirectory(directory, child));
+            } else System.err.println("Permission denied.");
+        } else System.err.println("Destination is no directory.");
     }
 
     public void ping(Network network, String ip) {
