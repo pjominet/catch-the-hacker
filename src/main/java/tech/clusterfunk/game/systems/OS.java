@@ -8,15 +8,31 @@ import tech.clusterfunk.util.FilesystemLoader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class OS {
     private String name;
-    private List<Command> commandSet;
+    private Map<String, Command> commandSet;
     private Node fileSystemPosition;
     private String user;
 
     private void loadFS(String osName) {
         fileSystemPosition = FilesystemLoader.parseFileSystem(osName);
+    }
+
+    private void loadCS(String osName) {
+        List<Command> set = CommandLoader.loadCommandSet(osName);
+        commandSet = new ConcurrentHashMap<>();
+        set.forEach(command -> commandSet.put(command.getName(), command));
+    }
+
+    public OS(String name, String user) {
+        this.name = name;
+        this.user = user;
+        loadCS(this.name);
+        loadFS(this.name);
+        setCorrectUserHomeFolder(this.fileSystemPosition);
     }
 
     private void setCorrectUserHomeFolder(Node current) {
@@ -37,20 +53,8 @@ public class OS {
         return directoryNames;
     }
 
-    public OS(String name, String user) {
-        this.name = name;
-        commandSet = CommandLoader.loadCommandSet(name);
-        loadFS(name);
-        this.user = user;
-        setCorrectUserHomeFolder(fileSystemPosition);
-    }
-
     public String getName() {
         return name;
-    }
-
-    public List<Command> getCommandSet() {
-        return commandSet;
     }
 
     public Node getFileSystemPosition() {
@@ -66,12 +70,11 @@ public class OS {
     }
 
     public boolean hasCommand(String cmdName) {
-        boolean found = false;
-        for (Command command : commandSet) {
-            found = cmdName.equals(command.getName());
-            if (found) break;
-        }
-        return found;
+        return commandSet.get(cmdName) != null;
+    }
+
+    public Command getFromCommandSet(String cmdName) {
+        return commandSet.get(cmdName);
     }
 
     public String getCurrentPath() {

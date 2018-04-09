@@ -80,7 +80,6 @@ public class Game {
         out.println(out + "\n", Attribute.NONE, FColor.WHITE, BColor.BLACK);
 
         init("Patrick", "DOORS", "blyatrick");
-
         OS playerOS = player.getComputer().getOS();
         System.out.println();
 
@@ -140,11 +139,12 @@ public class Game {
         String nick = in.next();
 
         init(name, os, nick);
+        OS playerOS = player.getComputer().getOS();
 
         out.print("\nAs installer finishes, you are being greeted by the welcome screen of " +
-                player.getComputer().getOS().getName() + ".\n"
+                playerOS.getName() + ".\n"
                 + "You launch the terminal and newGame working...\n");
-        System.out.print("\n" + player.getComputer().getOS().getFileSystemPosition() + " > ");
+        System.out.print("\n" + playerOS.getCurrentPath() + " > ");
         String command = in.next();
 
         out.clear();
