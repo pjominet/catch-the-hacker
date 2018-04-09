@@ -1,59 +1,41 @@
 package tech.clusterfunk.game.network;
 
 import tech.clusterfunk.game.characters.NPC;
+import tech.clusterfunk.util.exceptions.NoComputerAtThisAddressException;
 
-import java.util.ArrayList;
 import java.util.Formatter;
-import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Network {
-    private List<Computer> network;
-    private List<String> addressList;
+    private Map<String, Computer> network;
 
     public Network(int size) {
-        network = new ArrayList<>();
+        network = new ConcurrentHashMap<>();
         try {
             for (int i = 0; i < size; i++) {
-                network.add(new NPC(i).getComputer());
+                Computer computer = new NPC(i).getComputer();
+                network.put(computer.getIP(), computer);
                 // wait to be sure next rnd seed is different
                 Thread.sleep(7);
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        generateAddressList();
-    }
-
-    private void generateAddressList() {
-        addressList = new ArrayList<>();
-        for (Computer computer : network) {
-            addressList.add(computer.getIP());
-        }
     }
 
     public void addComputer(Computer computer) {
-        network.add(computer);
-        addressList.add(computer.getIP());
+        network.put(computer.getIP(), computer);
     }
 
-    // TODO implement custom invalid address exception
-    public Computer findComputerAt(String ip) {
-        Computer found = null;
+    public Computer findComputerAt(String ip) throws NoComputerAtThisAddressException {
         if (ip.matches("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}")) {
-            for (Computer computer : network) {
-                if (computer.getIP().equals(ip))
-                    found = computer;
+            for (Map.Entry<String, Computer> entry : network.entrySet()) {
+                if (entry.getValue().getIP().equals(ip))
+                    return entry.getValue();
             }
         }
-        return found;
-    }
-
-    public List<Computer> getNetwork() {
-        return network;
-    }
-
-    public List<String> getAddressList() {
-        return addressList;
+        throw new NoComputerAtThisAddressException("No Computer found at " + ip);
     }
 
     @Override
@@ -61,8 +43,8 @@ public class Network {
         StringBuilder builder = new StringBuilder();
         Formatter formatter = new Formatter(builder);
         int index = 0;
-        for (String address : addressList) {
-            formatter.format("%-15s", address);
+        for (Map.Entry<String, Computer> entry : network.entrySet()) {
+            formatter.format("%-15s", entry.getValue().getIP());
             if (++index % 4 == 0) {
                 builder.append("\n");
             } else builder.append("  ");
