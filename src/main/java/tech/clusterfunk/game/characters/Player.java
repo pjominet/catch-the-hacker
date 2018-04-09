@@ -15,7 +15,7 @@ public class Player extends Character implements Hacker {
         this.commandList = CommandLoader.loadDefaultCommands();
     }
 
-    public String listCommands(String os) {
+    public String listAvailableCommandsBy(String os) {
         StringBuilder builder = new StringBuilder();
         builder.append(os).append(": ");
         for (Command cmd : commandList) {
@@ -27,7 +27,7 @@ public class Player extends Character implements Hacker {
 
     public List<Command> getAvailableCommands() {
         List<Command> availableCommands = new ArrayList<>();
-        for (Command command: commandList) {
+        for (Command command : commandList) {
             if (command.getOs().equals(this.computer.getOS().getName()))
                 availableCommands.add(command);
         }
@@ -37,7 +37,7 @@ public class Player extends Character implements Hacker {
     // TODO: add custom exception when command is null instead of returning null
     public Command useCommand(String cmdName) {
         Command found = null;
-        for (Command command: getAvailableCommands()) {
+        for (Command command : getAvailableCommands()) {
             if (cmdName.equals(command.getName()))
                 found = command;
             if (found != null) break;
