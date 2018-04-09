@@ -89,6 +89,7 @@ public class OS {
         return builder.toString();
     }
 
+    // TODO: only list immediate children, implement showTree for debugging separately
     public void listChildren(Node current) {
         current.getChildren().forEach(child ->
                 System.out.format("%s %s " + child.getName() + "%n",
