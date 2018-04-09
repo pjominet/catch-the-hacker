@@ -66,20 +66,8 @@ public class OS {
         return fileSystemPosition;
     }
 
-    public void setFileSystemPosition(Node fileSystemPosition) {
-        this.fileSystemPosition = fileSystemPosition;
-    }
-
     public String getUser() {
         return user;
-    }
-
-    public int getAccessLevel() {
-        return accessLevel;
-    }
-
-    public void setAccessLevel(int accessLevel) {
-        this.accessLevel = accessLevel;
     }
 
     public boolean hasCommand(String cmdName) {
@@ -114,24 +102,34 @@ public class OS {
         return node.getPermissions().contains(permission);
     }
 
-    public void changeDirectory(String directory, Node current) {
-        if (current.getType() == NodeType.DIRECTORY) {
-            if(isPermitted(current, "r")) {
-                if (directory.equals("..")) fileSystemPosition = current.getParent();
-                else if (current.getName().equals(directory) ||
-                        (directory.equals("~") && current.getName().equals(user)))
-                    fileSystemPosition = current;
-                else current.getChildren().forEach(child -> changeDirectory(directory, child));
+    private boolean hasPrivilege(int accessLevel) {
+        return this.accessLevel >= accessLevel;
+    }
+
+    public void changeDirectory(String directory, Node current, int accessLevel) {
+        if (hasPrivilege(accessLevel)) {
+            if (isPermitted(current, "r")) {
+                if (current.getType() == NodeType.DIRECTORY) {
+                    if (directory.equals("..")) fileSystemPosition = current.getParent();
+                    else if (current.getName().equals(directory) ||
+                            (directory.equals("~") && current.getName().equals(user)))
+                        fileSystemPosition = current;
+                    else current.getChildren().forEach(child -> changeDirectory(directory, child, accessLevel));
+                } else System.err.println("Destination is no directory.");
             } else System.err.println("Permission denied.");
-        } else System.err.println("Destination is no directory.");
+        } else System.err.println("Not high enough privilege.");
     }
 
     public void ping(Network network, String ip) {
-        try {
-            if (network.isComputerAt(ip))
-                System.out.println("Found active computer at " + ip);
-        } catch (InvalidIPException | UnknownIPException e) {
-            System.err.println(e.getMessage());
+        if (ip.equals("127.0.0.1"))
+            System.err.println("Pinging your own system is somewhat pointless, don't you think?");
+        else {
+            try {
+                if (network.isComputerAt(ip))
+                    System.out.println("Found active computer at " + ip);
+            } catch (InvalidIPException | UnknownIPException e) {
+                System.err.println(e.getMessage());
+            }
         }
     }
 }

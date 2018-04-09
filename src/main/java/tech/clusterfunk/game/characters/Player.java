@@ -25,6 +25,14 @@ public class Player extends Character {
         initDefaultCommands();
     }
 
+    public int getSkill() {
+        return skill;
+    }
+
+    public void setSkill(int skill) {
+        this.skill = skill;
+    }
+
     public String listAvailableCommandsBy(String os) {
         StringBuilder builder = new StringBuilder();
         builder.append(os).append(": ");
