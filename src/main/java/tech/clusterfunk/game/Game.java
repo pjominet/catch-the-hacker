@@ -92,7 +92,7 @@ public class Game {
         // simulate command prompt at current FS position
         out.println(playerOS.getCurrentPath() + " > ");
         // list child directories
-        playerOS.listDirectories(playerOS.getFileSystemPosition());
+        playerOS.listChildren(playerOS.getFileSystemPosition());
         out.print("\n");
         out.println("--- Hacker stats ---", Attribute.BOLD, FColor.CYAN, BColor.BLACK);
         out.clear();

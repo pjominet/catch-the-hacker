@@ -1,8 +1,9 @@
 package tech.clusterfunk.game.systems;
 
 import tech.clusterfunk.game.systems.filesystem.Node;
-import tech.clusterfunk.util.FilesystemLoader;
+import tech.clusterfunk.game.systems.filesystem.NodeType;
 import tech.clusterfunk.util.CommandLoader;
+import tech.clusterfunk.util.FilesystemLoader;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,6 +22,19 @@ public class OS {
     private void setCorrectUserHomeFolder(Node current) {
         if (current.getName().equals("NewUser")) current.setName(user);
         else current.getChildren().forEach(this::setCorrectUserHomeFolder);
+    }
+
+    private List<String> getDirectoriesToRoot() {
+        Node current = fileSystemPosition;
+        List<String> directoryNames = new ArrayList<>();
+        while (current.getParent() != null) {
+            directoryNames.add(current.getName());
+            current = current.getParent();
+        }
+        directoryNames.add(current.getName());
+
+        Collections.reverse(directoryNames);
+        return directoryNames;
     }
 
     public OS(String name, String user) {
@@ -60,19 +74,6 @@ public class OS {
         return found;
     }
 
-    private List<String> getDirectoriesToRoot() {
-        Node current = fileSystemPosition;
-        List<String> directoryNames = new ArrayList<>();
-        while (current.getParent() != null) {
-            directoryNames.add(current.getName());
-            current = current.getParent();
-        }
-        directoryNames.add(current.getName());
-
-        Collections.reverse(directoryNames);
-        return directoryNames;
-    }
-
     public String getCurrentPath() {
         StringBuilder builder = new StringBuilder();
         getDirectoriesToRoot().forEach(name -> {
@@ -84,16 +85,22 @@ public class OS {
         return builder.toString();
     }
 
-    public void listDirectories(Node current) {
-        current.getChildren().forEach(child -> System.out.println(child.getName()));
-        current.getChildren().forEach(this::listDirectories);
+    public void listChildren(Node current) {
+        current.getChildren().forEach(child ->
+                System.out.format("%s %s " + child.getName() + "%n",
+                        child.getType().getAbbreviation(),
+                        child.getPermissions())
+        );
+        current.getChildren().forEach(this::listChildren);
     }
 
     public void changeDirectory(String directory, Node current) {
-        if (directory.equals("..")) fileSystemPosition = current.getParent();
-        else if (current.getName().equals(directory) ||
-                (directory.equals("~") && current.getName().equals(user)))
-            fileSystemPosition = current;
-        else current.getChildren().forEach(child -> changeDirectory(directory, child));
+        if (current.getType() == NodeType.DIRECTORY) {
+            if (directory.equals("..")) fileSystemPosition = current.getParent();
+            else if (current.getName().equals(directory) ||
+                    (directory.equals("~") && current.getName().equals(user)))
+                fileSystemPosition = current;
+            else current.getChildren().forEach(child -> changeDirectory(directory, child));
+        }
     }
 }
