@@ -1,9 +1,12 @@
 package tech.clusterfunk.game.systems;
 
+import tech.clusterfunk.game.network.Network;
 import tech.clusterfunk.game.systems.filesystem.Node;
 import tech.clusterfunk.game.systems.filesystem.NodeType;
 import tech.clusterfunk.util.CommandLoader;
 import tech.clusterfunk.util.FilesystemLoader;
+import tech.clusterfunk.util.exceptions.InvalidIPException;
+import tech.clusterfunk.util.exceptions.UnknownIPException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -104,6 +107,15 @@ public class OS {
                     (directory.equals("~") && current.getName().equals(user)))
                 fileSystemPosition = current;
             else current.getChildren().forEach(child -> changeDirectory(directory, child));
+        }
+    }
+
+    public void ping(Network network, String ip) {
+        try {
+            if (network.isComputerAt(ip))
+                System.out.println("Found active computer at " + ip);
+        } catch (InvalidIPException | UnknownIPException e) {
+            System.err.println(e.getMessage());
         }
     }
 }
