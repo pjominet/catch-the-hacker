@@ -10,6 +10,8 @@ import tech.clusterfunk.game.network.Computer;
 import tech.clusterfunk.game.network.Network;
 import tech.clusterfunk.game.systems.OS;
 import tech.clusterfunk.util.CommandLoader;
+import tech.clusterfunk.util.exceptions.InvalidIPException;
+import tech.clusterfunk.util.exceptions.UnknownIPException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -101,16 +103,17 @@ public class Game {
         out.clear();
         out.println(network.toString());
 
-        /*
+
         System.out.print("Find Computer: ");
         String ip = in.next();
-        Computer computer = network.findComputerAt(ip);
-        if (computer != null)
+        try {
+            Computer computer = network.findComputerAt(ip);
             out.println(computer.toString());
-        else out.println("No computer found at this address!");
+        } catch (UnknownIPException | InvalidIPException e) {
+            e.printStackTrace();
+        }
 
         out.clear();
-        */
     }
 
     public void run() {

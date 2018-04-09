@@ -1,7 +1,8 @@
 package tech.clusterfunk.game.network;
 
 import tech.clusterfunk.game.characters.NPC;
-import tech.clusterfunk.util.exceptions.NoComputerAtThisAddressException;
+import tech.clusterfunk.util.exceptions.InvalidIPException;
+import tech.clusterfunk.util.exceptions.UnknownIPException;
 
 import java.util.Formatter;
 import java.util.Map;
@@ -28,14 +29,14 @@ public class Network {
         network.put(computer.getIP(), computer);
     }
 
-    public Computer findComputerAt(String ip) throws NoComputerAtThisAddressException {
+    public Computer findComputerAt(String ip) throws UnknownIPException, InvalidIPException {
         if (ip.matches("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}")) {
             for (Map.Entry<String, Computer> entry : network.entrySet()) {
                 if (entry.getValue().getIP().equals(ip))
                     return entry.getValue();
             }
-        }
-        throw new NoComputerAtThisAddressException("No Computer found at " + ip);
+        } else throw new InvalidIPException("Invalid IP address");
+        throw new UnknownIPException("No Computer found at " + ip);
     }
 
     @Override
