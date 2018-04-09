@@ -15,9 +15,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.Hashtable;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static tech.clusterfunk.Main.CONFIG_ROOT;
 
@@ -39,7 +39,7 @@ public class Game {
 
     private void loadInitConfig() {
         String config = CONFIG_ROOT + "init.config";
-        initConfig = new Hashtable<>();
+        initConfig = new ConcurrentHashMap<>();
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(
                         CommandLoader.class.getResourceAsStream(config),
