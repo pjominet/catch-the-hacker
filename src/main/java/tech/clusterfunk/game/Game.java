@@ -26,6 +26,7 @@ import static tech.clusterfunk.Main.CONFIG_ROOT;
 
 public class Game {
     private int difficulty;
+    private int turns;
 
     private Player player;
     private Hacker hacker;
@@ -39,6 +40,7 @@ public class Game {
         out = new ColoredPrinter.Builder(1, false).build();
         in = new Scanner(System.in);
         loadInitConfig();
+        this.turns = Integer.valueOf(initConfig.get("turns"));
     }
 
     private void loadInitConfig() {
@@ -62,7 +64,7 @@ public class Game {
     private void init(String playerName, String playerOs, String playerNick) {
         System.out.println(">> Setting up game...");
 
-        Computer playerPC = new Computer(playerOs, playerNick, Integer.valueOf(initConfig.get("player_protection")));
+        Computer playerPC = new Computer(playerOs, playerNick, Integer.valueOf(initConfig.get("player_skill")));
         player = new Player(playerName, playerPC, Integer.valueOf(initConfig.get("player_skill")));
 
         Computer hackerPC = new Computer(initConfig.get("blackhat_os"),
@@ -98,8 +100,6 @@ public class Game {
         out.println("--- Player stats ---", Attribute.BOLD, FColor.CYAN, BColor.BLACK);
         out.clear();
         out.println(player.toString());
-        // change to home directory
-        playerOS.changeDirectory("~", playerOS.getFileSystemPosition());
         // simulate command prompt at current FS position
         out.println(playerOS.getCurrentPath() + " > ");
         // list child directories
@@ -160,6 +160,8 @@ public class Game {
         out.print("\nAs installer finishes, you are being greeted by the welcome screen of " +
                 playerOS.getName() + ".\n"
                 + "You launch the terminal and newGame working...\n");
+        // change to home directory
+        playerOS.changeDirectory("~", playerOS.getFileSystemPosition(), player.getSkill());
         System.out.print("\n" + playerOS.getCurrentPath() + " > ");
         String command = in.next();
 
