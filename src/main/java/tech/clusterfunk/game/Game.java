@@ -104,14 +104,16 @@ public class Game {
         out.println(network.toString());
 
 
+        /*
         System.out.print("Find Computer: ");
         String ip = in.next();
         try {
             Computer computer = network.findComputerAt(ip);
             out.println(computer.toString());
         } catch (UnknownIPException | InvalidIPException e) {
-            e.printStackTrace();
+            e.getMessage();
         }
+        */
 
         out.clear();
     }

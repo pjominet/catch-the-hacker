@@ -2,11 +2,19 @@ package tech.clusterfunk.util.exceptions;
 
 public class InvalidIPException extends Exception {
 
-    public InvalidIPException(String msg) {
-        super(msg);
+    private String message;
+
+    public InvalidIPException(String message) {
+        this.message = message;
     }
 
-    public InvalidIPException(String msg, Throwable cause) {
-        super(msg, cause);
+    public InvalidIPException(String message, Throwable cause) {
+        super(cause);
+        this.message = message;
+    }
+
+    @Override
+    public String getMessage(){
+        return message;
     }
 }

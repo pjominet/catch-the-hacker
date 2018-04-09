@@ -2,11 +2,19 @@ package tech.clusterfunk.util.exceptions;
 
 public class CommandDoesNotExistException extends Exception {
 
-    public CommandDoesNotExistException(String msg) {
-        super(msg);
+    private String message;
+
+    public CommandDoesNotExistException(String message) {
+        this.message = message;
     }
 
-    public CommandDoesNotExistException(String msg, Throwable cause) {
-        super(msg, cause);
+    public CommandDoesNotExistException(String message, Throwable cause) {
+        super(cause);
+        this.message = message;
+    }
+
+    @Override
+    public String getMessage() {
+        return message;
     }
 }

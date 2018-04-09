@@ -2,13 +2,19 @@ package tech.clusterfunk.util.exceptions;
 
 public class UnknownIPException extends Exception {
 
-    public UnknownIPException(String msg) {
-        super(msg);
+    private String message;
+
+    public UnknownIPException(String message) {
+        this.message = message;
     }
 
-    public UnknownIPException(String msg, Throwable cause) {
-        super(msg, cause);
+    public UnknownIPException(String message, Throwable cause) {
+        super(cause);
+        this.message = message;
     }
 
-
+    @Override
+    public String getMessage(){
+        return message;
+    }
 }
