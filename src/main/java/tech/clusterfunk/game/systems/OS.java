@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static tech.clusterfunk.Main.SUDO;
+
 public class OS {
     private String name;
     private Map<String, Command> commandSet;
@@ -89,36 +91,33 @@ public class OS {
         return builder.toString();
     }
 
-    // TODO: only list immediate children, implement showTree for debugging separately
-    public void listChildren(Node current) {
-        current.getChildren().forEach(child ->
-                System.out.format("%s %s " + child.getName() + "%n",
-                        child.getType().getAbbreviation(),
-                        child.getPermissions())
-        );
-        current.getChildren().forEach(this::listChildren);
-    }
+    private boolean isPermitted(Node node, String permission, int accessLevel) {
+        // sudo case - can skip all other checks
+        if (accessLevel == SUDO) return true;
+        // if access level is not sudo
+        else if (accessLevel >= this.accessLevel) {
+            if(node.getPermissions().contains(permission)) return true;
+            else {
+                System.err.println("Permission denied.");
+                return false;
+            }
+        } else {
+            System.err.println("Not high enough privilege.");
+            return false;
+        }
 
-    private boolean isPermitted(Node node, String permission) {
-        return node.getPermissions().contains(permission);
-    }
-
-    private boolean hasPrivilege(int accessLevel) {
-        return this.accessLevel >= accessLevel;
     }
 
     public void changeDirectory(String directory, Node current, int accessLevel) {
-        if (hasPrivilege(accessLevel)) {
-            if (isPermitted(current, "r")) {
-                if (current.getType() == NodeType.DIRECTORY) {
-                    if (directory.equals("..")) fileSystemPosition = current.getParent();
-                    else if (current.getName().equals(directory) ||
-                            (directory.equals("~") && current.getName().equals(user)))
-                        fileSystemPosition = current;
-                    else current.getChildren().forEach(child -> changeDirectory(directory, child, accessLevel));
-                } else System.err.println("Destination is no directory.");
-            } else System.err.println("Permission denied.");
-        } else System.err.println("Not high enough privilege.");
+        if (current.getType() == NodeType.DIRECTORY) {
+            if (isPermitted(current, "r", accessLevel)) {
+                if (directory.equals("..")) fileSystemPosition = current.getParent();
+                else if (current.getName().equals(directory) ||
+                        (directory.equals("~") && current.getName().equals(user)))
+                    fileSystemPosition = current;
+                else current.getChildren().forEach(child -> changeDirectory(directory, child, accessLevel));
+            }
+        } else System.err.println("Destination is no directory.");
     }
 
     public void ping(Network network, String ip) {
@@ -132,5 +131,13 @@ public class OS {
                 System.err.println(e.getMessage());
             }
         }
+    }
+
+    public void list(Node current) {
+        current.getChildren().forEach(child ->
+                System.out.format("%s %s " + child.getName() + "%n",
+                        child.getType().getAbbreviation(),
+                        child.getPermissions())
+        );
     }
 }

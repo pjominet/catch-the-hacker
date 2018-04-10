@@ -5,6 +5,8 @@ import tech.clusterfunk.game.systems.OS;
 import java.util.Random;
 import java.util.StringJoiner;
 
+import static tech.clusterfunk.Main.MAX_ALLOWED_ACCESSLEVEL;
+import static tech.clusterfunk.game.Game.DIFFICULTY;
 
 public class Computer {
     private String ip;
@@ -25,8 +27,8 @@ public class Computer {
     private OS randomOS(String user) {
         Random rnd = new Random(System.currentTimeMillis());
         int osChoice = rnd.nextInt(3);
-        int minDifficultyModifier = 1;
-        int accessLevel = rnd.nextInt(4) + minDifficultyModifier;
+        int minAllowedAccessLevel = 1 + DIFFICULTY;
+        int accessLevel = rnd.nextInt(MAX_ALLOWED_ACCESSLEVEL - minAllowedAccessLevel) + minAllowedAccessLevel;
 
         if (osChoice == 0) return new OS("DOORS", user, accessLevel);
         else if (osChoice == 1) return new OS("OSY", user, accessLevel);
