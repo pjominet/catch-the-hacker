@@ -25,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import static tech.clusterfunk.Main.CONFIG_ROOT;
 
 public class Game {
-    private int difficulty;
+    public static int DIFFICULTY = 0;
     private int turns;
 
     private Player player;
@@ -73,16 +73,17 @@ public class Game {
         );
         hacker = new Hacker(initConfig.get("blackhat_name"), hackerPC);
 
-        network = new Network(Integer.valueOf(initConfig.get("network_size")));
+        int networkSize = Integer.valueOf(initConfig.get("network_size")) * (DIFFICULTY + 1);
+        network = new Network(networkSize);
         network.addComputer(hackerPC);
         network.addComputer(playerPC);
 
         /*
         System.out.print("\n>> Please select game difficulty (0=easy, 1=medium, 2=hard): ");
-        this.difficulty = in.nextInt();
+        DIFFICULTY = in.nextInt();
         */
         // for debugging automation
-        this.difficulty = 0;
+        DIFFICULTY = 0;
 
         System.out.println(">> Done!");
     }
@@ -103,7 +104,7 @@ public class Game {
         // simulate command prompt at current FS position
         out.println(playerOS.getCurrentPath() + " > ");
         // list child directories
-        playerOS.listChildren(playerOS.getFileSystemPosition());
+        playerOS.list(playerOS.getFileSystemPosition());
         out.print("\n");
         out.println("--- Hacker stats ---", Attribute.BOLD, FColor.CYAN, BColor.BLACK);
         out.clear();
@@ -159,7 +160,7 @@ public class Game {
 
         out.print("\nAs installer finishes, you are being greeted by the welcome screen of " +
                 playerOS.getName() + ".\n"
-                + "You launch the terminal and newGame working...\n");
+                + "You launch the terminal and start working...\n");
         // change to home directory
         playerOS.changeDirectory("~", playerOS.getFileSystemPosition(), player.getSkill());
         System.out.print("\n" + playerOS.getCurrentPath() + " > ");
