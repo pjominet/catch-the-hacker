@@ -22,7 +22,7 @@ public class FilesystemLoader {
         Node node = new Node();
         node.setName(current.getString("name"));
         node.setType(NodeType.fromAbbreviation(current.getString("type")));
-        node.setPermissions(current.getString("permissions"));
+        node.setPermissions(current.getString("permissions").toCharArray());
 
         current.getJSONArray("children").forEach(jsonChild -> {
             Node child = buildTree((JSONObject) jsonChild);

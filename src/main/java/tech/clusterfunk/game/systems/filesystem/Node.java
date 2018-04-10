@@ -8,10 +8,11 @@ public class Node {
     private List<Node> children;
     private String name;
     private NodeType type;
-    private String permissions;
+    private char[] permissions;
 
     public Node() {
         children = new LinkedList<>();
+        permissions = new char[3];
     }
 
     public Node getParent() {
@@ -46,12 +47,19 @@ public class Node {
         this.type = type;
     }
 
-    public String getPermissions() {
+    public char[] getPermissions() {
         return permissions;
     }
 
-    public void setPermissions(String permissions) {
+    public void setPermissions(char[] permissions) {
         this.permissions = permissions;
+    }
+
+    public boolean hasPermisson(char permission) {
+        for (char c : permissions) {
+            if (c == permission) return true;
+        }
+        return false;
     }
 
     @Override
