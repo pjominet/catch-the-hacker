@@ -98,33 +98,42 @@ public class Game {
         OS playerOS = player.getComputer().getOS();
         System.out.println();
 
+        // debug stats
         out.println("--- Player stats ---", Attribute.BOLD, FColor.CYAN, BColor.BLACK);
         out.clear();
         out.println(player.toString());
-        // simulate command prompt at current FS position
-        out.println(playerOS.getCurrentPath() + " > ");
-        // list child directories
-        playerOS.list(playerOS.getFileSystemPosition());
+
         out.print("\n");
         out.println("--- Hacker stats ---", Attribute.BOLD, FColor.CYAN, BColor.BLACK);
         out.clear();
         out.println(hacker.toString());
+
         out.print("\n");
         out.println("--- Network map ---", Attribute.BOLD, FColor.CYAN, BColor.BLACK);
         out.clear();
         out.println(network.toString());
 
-        System.out.print("Find Computer: ");
+        // simulate command prompt at current FS position
+        out.println(playerOS.getCurrentPath() + " > ls");
+        // list child directories
+        playerOS.list(playerOS.getCurrentFSPosition());
+
+        // change permission
+        playerOS.changeMode("+w", "Program Data", playerOS.getFsRoot(), 6);
+        // list changes
+        out.println(playerOS.getCurrentPath() +" > chmod +w Program Data");
+        playerOS.list(playerOS.getCurrentFSPosition());
+        // revert change permission
+        playerOS.changeMode("-w", "Program Data", playerOS.getFsRoot(), 6);
+        // list changes
+        out.println(playerOS.getCurrentPath() +" > chmod -w Program Data");
+        playerOS.list(playerOS.getCurrentFSPosition());
+        System.out.println();
+
+        // ping test
+        System.out.print("Ping Computer: ");
         String ip = in.next();
-        try {
-            out.println(network.getComputerByIP(ip).toString());
-        } catch (InvalidIPException | UnknownIPException e) {
-            System.err.println(e.getMessage());
-        } catch (FatalException e) {
-            System.err.println(e.getMessage());
-            e.printStackTrace();
-            System.exit(1);
-        }
+        playerOS.ping(network, ip);
 
         out.clear();
     }
@@ -162,7 +171,7 @@ public class Game {
                 playerOS.getName() + ".\n"
                 + "You launch the terminal and start working...\n");
         // change to home directory
-        playerOS.changeDirectory("~", playerOS.getFileSystemPosition(), player.getSkill());
+        playerOS.changeDirectory("~", playerOS.getCurrentFSPosition(), player.getSkill());
         System.out.print("\n" + playerOS.getCurrentPath() + " > ");
         String command = in.next();
 

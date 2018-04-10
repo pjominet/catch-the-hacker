@@ -19,12 +19,13 @@ import static tech.clusterfunk.Main.SUDO;
 public class OS {
     private String name;
     private Map<String, Command> commandSet;
-    private Node fileSystemPosition;
+    private Node currentFSPosition;
+    private Node fsRoot;
     private String user;
     private int accessLevel;
 
     private void loadFS(String osName) {
-        fileSystemPosition = FilesystemLoader.parseFileSystem(osName);
+        fsRoot = FilesystemLoader.parseFileSystem(osName);
     }
 
     private void loadCS(String osName) {
@@ -39,7 +40,8 @@ public class OS {
         this.accessLevel = accessLevel;
         loadCS(this.name);
         loadFS(this.name);
-        setCorrectUserHomeFolder(this.fileSystemPosition);
+        this.currentFSPosition = this.fsRoot;
+        setCorrectUserHomeFolder(this.currentFSPosition);
     }
 
     private void setCorrectUserHomeFolder(Node current) {
@@ -48,7 +50,7 @@ public class OS {
     }
 
     private List<String> getDirectoriesToRoot() {
-        Node current = fileSystemPosition;
+        Node current = currentFSPosition;
         List<String> directoryNames = new ArrayList<>();
         while (current.getParent() != null) {
             directoryNames.add(current.getName());
@@ -64,8 +66,12 @@ public class OS {
         return name;
     }
 
-    public Node getFileSystemPosition() {
-        return fileSystemPosition;
+    public Node getFsRoot() {
+        return fsRoot;
+    }
+
+    public Node getCurrentFSPosition() {
+        return currentFSPosition;
     }
 
     public String getUser() {
@@ -91,35 +97,74 @@ public class OS {
         return builder.toString();
     }
 
-    private boolean isPermitted(Node node, String permission, int accessLevel) {
-        // sudo case - can skip all other checks
-        if (accessLevel == SUDO) return true;
-        // if access level is not sudo
-        else if (accessLevel >= this.accessLevel) {
-            if(node.getPermissions().contains(permission)) return true;
+    // Command Utils
+    private boolean isPermitted(Node node, char permission, int accessLevel) {
+        if (hasPrivilege(accessLevel)) {
+            if (node.hasPermisson(permission)) return true;
             else {
                 System.err.println("Permission denied.");
                 return false;
             }
-        } else {
+        } else return false;
+    }
+
+    private boolean hasPrivilege(int accessLevel) {
+        if (accessLevel == SUDO) return true;
+        else if (accessLevel >= this.accessLevel) return true;
+        else {
             System.err.println("Not high enough privilege.");
             return false;
         }
-
     }
 
+    private void changePermission(char modifier, char permission, Node node) {
+        char[] replacer = node.getPermissions();
+        if (modifier == '-') {
+            switch (permission) {
+                case 'r':
+                    replacer[0] = '-';
+                    break;
+                case 'w':
+                    replacer[1] = '-';
+                    break;
+                case 'x':
+                    replacer[2] = '-';
+                    break;
+                default:
+                    break;
+            }
+        } else if (modifier == '+') {
+            switch (permission) {
+                case 'r':
+                    replacer[0] = permission;
+                    break;
+                case 'w':
+                    replacer[1] = permission;
+                    break;
+                case 'x':
+                    replacer[2] = permission;
+                    break;
+                default:
+                    break;
+            }
+        }
+        node.setPermissions(replacer);
+    }
+
+    // Commands
     public void changeDirectory(String directory, Node current, int accessLevel) {
         if (current.getType() == NodeType.DIRECTORY) {
-            if (isPermitted(current, "r", accessLevel)) {
-                if (directory.equals("..")) fileSystemPosition = current.getParent();
+            if (isPermitted(current, 'r', accessLevel)) {
+                if (directory.equals("..")) currentFSPosition = current.getParent();
                 else if (current.getName().equals(directory) ||
                         (directory.equals("~") && current.getName().equals(user)))
-                    fileSystemPosition = current;
+                    currentFSPosition = current;
                 else current.getChildren().forEach(child -> changeDirectory(directory, child, accessLevel));
             }
         } else System.err.println("Destination is no directory.");
     }
 
+    // TODO: add better ping response (more like real ping)
     public void ping(Network network, String ip) {
         if (ip.equals("127.0.0.1"))
             System.err.println("Pinging your own system is somewhat pointless, don't you think?");
@@ -137,7 +182,19 @@ public class OS {
         current.getChildren().forEach(child ->
                 System.out.format("%s %s " + child.getName() + "%n",
                         child.getType().getAbbreviation(),
-                        child.getPermissions())
+                        String.valueOf(child.getPermissions()))
         );
+    }
+
+    public void changeMode(String modeChange, String name, Node current, int accessLevel) {
+        if (hasPrivilege(accessLevel)) {
+            if (current.getName().equals(name)) {
+                char modifier = modeChange.charAt(0);
+                String permissions = modeChange.substring(1);
+                for (int i = 0; i < permissions.length(); i++) {
+                    changePermission(modifier, permissions.charAt(i), current);
+                }
+            } else current.getChildren().forEach(child -> changeMode(modeChange, name, child, accessLevel));
+        }
     }
 }
