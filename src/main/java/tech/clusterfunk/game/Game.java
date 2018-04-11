@@ -131,7 +131,7 @@ public class Game {
         playerOS.changeDirectory("Program Data", playerOS.getFsRoot(), SUDO);
 
         // write to file
-        out.println(playerOS.getCurrentPath() +" > echo Program Data");
+        out.println(playerOS.getCurrentPath() +" > echo \"This is some content\" test.txt");
         playerOS.writeToFile("This is some content", "test.txt", SUDO);
         playerOS.list(SUDO);
         System.out.println();
