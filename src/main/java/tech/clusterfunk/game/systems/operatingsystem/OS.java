@@ -202,10 +202,6 @@ public class OS {
     }
 
     // Commands
-
-    // TODO: find possible fix for false "Permission denied" message
-    // on directory that are not accessible when iterating tree
-    // and not trying to explicitly change to the latter
     /**
      * allows to change the current position in the filesystem tree (cd)
      * @param name of destination directory
