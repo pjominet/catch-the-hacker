@@ -1,7 +1,7 @@
 {
   "name": "/",
   "type": "d",
-  "permissions": "r--",
+  "permissions": "r-x",
   "children": [
     {
       "name": "bin",
@@ -12,12 +12,12 @@
     {
       "name": "var",
       "type": "d",
-      "permissions": "r--",
+      "permissions": "r-x",
       "children": [
         {
           "name": "logs",
           "type": "d",
-          "permissions": "rw-",
+          "permissions": "rwx",
           "children": []
         }
       ]
@@ -25,7 +25,7 @@
     {
       "name": "home",
       "type": "d",
-      "permissions": "rw-",
+      "permissions": "r-x",
       "children": [
         {
           "name": "NewUser",

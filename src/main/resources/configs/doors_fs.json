@@ -1,7 +1,7 @@
 {
   "name": "X:",
   "type": "d",
-  "permissions": "r--",
+  "permissions": "r-x",
   "children": [
     {
       "name": "Program Files",
@@ -12,12 +12,12 @@
     {
       "name": "Program Data",
       "type": "d",
-      "permissions": "r--",
+      "permissions": "r-x",
       "children": [
         {
           "name": "Logging",
           "type": "d",
-          "permissions": "rw-",
+          "permissions": "rwx",
           "children": []
         }
       ]
@@ -25,7 +25,7 @@
     {
       "name": "Users",
       "type": "d",
-      "permissions": "rw-",
+      "permissions": "r-x",
       "children": [
         {
           "name": "NewUser",
