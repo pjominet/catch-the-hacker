@@ -44,22 +44,13 @@ public class OS {
         setCorrectUserHomeFolder(this.currentFSPosition);
     }
 
+    /**
+     * Replace Generic user from config with actual user
+     * @param current recursion iteration
+     */
     private void setCorrectUserHomeFolder(Node current) {
         if (current.getName().equals("NewUser")) current.setName(user);
         else current.getChildren().forEach(this::setCorrectUserHomeFolder);
-    }
-
-    private List<String> getDirectoriesToRoot() {
-        Node current = currentFSPosition;
-        List<String> directoryNames = new ArrayList<>();
-        while (current.getParent() != null) {
-            directoryNames.add(current.getName());
-            current = current.getParent();
-        }
-        directoryNames.add(current.getName());
-
-        Collections.reverse(directoryNames);
-        return directoryNames;
     }
 
     public String getName() {
@@ -86,6 +77,27 @@ public class OS {
         return commandSet.get(cmdName);
     }
 
+    /**
+     * Traverse filesystem tree upwards
+     * @return List
+     */
+    private List<String> getDirectoriesToRoot() {
+        Node current = currentFSPosition;
+        List<String> directoryNames = new ArrayList<>();
+        while (current.getParent() != null) {
+            directoryNames.add(current.getName());
+            current = current.getParent();
+        }
+        directoryNames.add(current.getName());
+
+        Collections.reverse(directoryNames);
+        return directoryNames;
+    }
+
+    /**
+     * build a path to the current filesystem position
+     * @return String
+     */
     public String getCurrentPath() {
         StringBuilder builder = new StringBuilder();
         getDirectoriesToRoot().forEach(name -> {
@@ -98,6 +110,14 @@ public class OS {
     }
 
     // Permission control
+
+    /**
+     * Checks if a node can be manipulated
+     * @param node to be manipulated
+     * @param permission to check for
+     * @param accessLevel to identify privilege level
+     * @return boolean
+     */
     private boolean isPermitted(Node node, char permission, int accessLevel) {
         if (hasPrivilege(accessLevel)) {
             if (node.hasPermission(permission)) return true;
@@ -108,6 +128,11 @@ public class OS {
         } else return false;
     }
 
+    /**
+     * Checks if a node is accessible
+     * @param accessLevel to check for
+     * @return boolean
+     */
     private boolean hasPrivilege(int accessLevel) {
         if (accessLevel == SUDO) return true;
         else if (accessLevel >= this.accessLevel) return true;
@@ -123,6 +148,12 @@ public class OS {
     }
 
     // helper methods
+    /**
+     * changes a permission on a given node
+     * @param modifier that determines if to add or subtract a permission
+     * @param permission in question
+     * @param node to have its permission changed
+     */
     private void changePermission(char modifier, char permission, Node node) {
         char[] replacer = node.getPermissions();
         if (modifier == '-') {
@@ -157,13 +188,30 @@ public class OS {
         node.setPermissions(replacer);
     }
 
-    private Node createNode(String name, NodeType type) {
+    /**
+     * Creates a new node in the filesystem tree
+     * @param name of the new node
+     * @param type of the new node
+     * @param accessLevel to check for
+     * @return new node
+     */
+    private Node createNode(String name, NodeType type, int accessLevel) {
         if (isPermitted(currentFSPosition, 'w', accessLevel)) {
             return new Node(currentFSPosition, name, type, currentFSPosition.getPermissions());
         } else return null;
     }
 
     // Commands
+
+    // TODO: find possible fix for false "Permission denied" message
+    // on directory that are not accessible when iterating tree
+    // and not trying to explicitly change to the latter
+    /**
+     * allows to change the current position in the filesystem tree (cd)
+     * @param name of destination directory
+     * @param current recursion iteration
+     * @param accessLevel to check for
+     */
     public void changeDirectory(String name, Node current, int accessLevel) {
         if (current.getType() == NodeType.DIRECTORY) {
             if (isPermitted(current, 'x', accessLevel)) {
@@ -176,6 +224,11 @@ public class OS {
         } else System.err.println(name + " is no directory.");
     }
 
+    /**
+     * Ping a given address in the network (ping)
+     * @param network in question
+     * @param ip to ping
+     */
     public void ping(Network network, String ip) {
         if (ip.equals("127.0.0.1"))
             System.err.println("Pinging your own system is somewhat pointless, don't you think?");
@@ -201,6 +254,10 @@ public class OS {
         }
     }
 
+    /**
+     * List all direct child node of the current filesystem position (ls)
+     * @param accessLevel to check for
+     */
     public void list(int accessLevel) {
         if (isPermitted(currentFSPosition, 'r', accessLevel)) {
             currentFSPosition.getChildren().forEach(child ->
@@ -211,6 +268,13 @@ public class OS {
         }
     }
 
+    /**
+     * Change permission modes of a given node (chmod)
+     * @param modeChange param required from command
+     * @param file param required from command
+     * @param current recursion iteration
+     * @param accessLevel to check for
+     */
     public void changeMode(String modeChange, String file, Node current, int accessLevel) {
         if (hasPrivilege(accessLevel)) {
             if (current.getName().equals(file)) {
@@ -223,6 +287,12 @@ public class OS {
         }
     }
 
+    /**
+     * Read and return contents of a file (vim)
+     * @param name of the file
+     * @param accessLevel to check for
+     * @return String
+     */
     public String readFromFile(String name, int accessLevel) {
         String out = "";
         Node file = currentFSPosition.findChildBy(name);
@@ -236,6 +306,12 @@ public class OS {
         return out;
     }
 
+    /**
+     * Write content to a file, if the file does not exist, a new one is created (echo)
+     * @param content to write to the file
+     * @param name of the file
+     * @param accessLevel to check for
+     */
     public void writeToFile(String content, String name, int accessLevel) {
         if (isPermitted(currentFSPosition, 'w', accessLevel)) {
             Node file = currentFSPosition.findChildBy(name);
@@ -244,7 +320,7 @@ public class OS {
                     file.setContent(content);
                 else System.err.println(name + " is no file");
             } else {
-                file = createNode(name, NodeType.FILE);
+                file = createNode(name, NodeType.FILE, accessLevel);
                 if (file != null) {
                     file.setContent(content);
                     currentFSPosition.getChildren().add(file);
@@ -253,6 +329,12 @@ public class OS {
         }
     }
 
+    // TODO: exclude the possibility to delete filesystem root and its direct children
+    /**
+     * Remove a node from filesystem tree (rm)
+     * @param name of the node to remove
+     * @param accessLevel to check for
+     */
     public void remove(String name, int accessLevel) {
         if (isPermitted(currentFSPosition, 'x', accessLevel)) {
             Node node = currentFSPosition.findChildBy(name);
