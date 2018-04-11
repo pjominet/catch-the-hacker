@@ -98,6 +98,7 @@ public class Game {
         System.out.println();
 
         // debug stats
+        /*
         out.println("--- Player stats ---", Attribute.BOLD, FColor.CYAN, BColor.BLACK);
         out.clear();
         out.println(player.toString());
@@ -111,22 +112,39 @@ public class Game {
         out.println("--- Network map ---", Attribute.BOLD, FColor.CYAN, BColor.BLACK);
         out.clear();
         out.println(network.toString());
+        */
 
-        // simulate command prompt at current FS position
+        /* command simulation for debugging */
+        // list
         out.println(playerOS.getCurrentPath() + " > ls");
-        // list child directories
-        playerOS.list(playerOS.getCurrentFSPosition());
+        playerOS.list(SUDO);
+        System.out.println();
 
         // change permission
         playerOS.changeMode("+w", "Program Data", playerOS.getFsRoot(), SUDO);
-        // list changes
         out.println(playerOS.getCurrentPath() +" > chmod +w Program Data");
-        playerOS.list(playerOS.getCurrentFSPosition());
-        // revert change permission
-        playerOS.changeMode("-w", "Program Data", playerOS.getFsRoot(), SUDO);
-        // list changes
-        out.println(playerOS.getCurrentPath() +" > chmod -w Program Data");
-        playerOS.list(playerOS.getCurrentFSPosition());
+        playerOS.list(SUDO);
+        System.out.println();
+
+        //change directory
+        out.println(playerOS.getCurrentPath() +" > cd Program Data");
+        playerOS.changeDirectory("Program Data", playerOS.getFsRoot(), SUDO);
+
+        // write to file
+        out.println(playerOS.getCurrentPath() +" > echo Program Data");
+        playerOS.writeToFile("This is some content", "test.txt", SUDO);
+        playerOS.list(SUDO);
+        System.out.println();
+
+        //read from file
+        out.println(playerOS.getCurrentPath() +" > vim test.txt");
+        out.println(playerOS.readFromFile("test.txt", SUDO));
+        System.out.println();
+
+        // remove file
+        out.println(playerOS.getCurrentPath() +" > rm test.txt");
+        playerOS.remove("test.txt", SUDO);
+        playerOS.list(SUDO);
         System.out.println();
 
         // ping test
@@ -172,7 +190,7 @@ public class Game {
                 playerOS.getName() + ".\n"
                 + "You launch the terminal and start working...\n");
         // change to home directory
-        playerOS.changeDirectory("~", playerOS.getCurrentFSPosition(), player.getSkill());
+        playerOS.changeDirectory("~", playerOS.getFsRoot(), player.getSkill());
         System.out.print("\n" + playerOS.getCurrentPath() + " > ");
         String command = in.next();
 
