@@ -63,7 +63,7 @@
     {
       "name": "Doors",
       "type": "d",
-      "permissions": "r--",
+      "permissions": "r-x",
       "children": []
     }
   ]

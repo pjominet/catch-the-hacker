@@ -97,12 +97,12 @@ public class OS {
         return builder.toString();
     }
 
-    // Command Utils
+    // Permission control
     private boolean isPermitted(Node node, char permission, int accessLevel) {
         if (hasPrivilege(accessLevel)) {
-            if (node.hasPermisson(permission)) return true;
+            if (node.hasPermission(permission)) return true;
             else {
-                System.err.println("Permission denied.");
+                System.err.println("Permission denied");
                 return false;
             }
         } else return false;
@@ -112,11 +112,17 @@ public class OS {
         if (accessLevel == SUDO) return true;
         else if (accessLevel >= this.accessLevel) return true;
         else {
-            System.err.println("Not high enough privilege.");
+            System.err.println("Not high enough privilege");
             return false;
         }
     }
 
+    // TODO: implement proper check (similar to hack method)
+    public boolean isSudoAllowed(String password) {
+        return password.equals("root");
+    }
+
+    // helper methods
     private void changePermission(char modifier, char permission, Node node) {
         char[] replacer = node.getPermissions();
         if (modifier == '-') {
@@ -151,17 +157,23 @@ public class OS {
         node.setPermissions(replacer);
     }
 
+    private Node createNode(String name, NodeType type) {
+        if (isPermitted(currentFSPosition, 'w', accessLevel)) {
+            return new Node(currentFSPosition, name, type, currentFSPosition.getPermissions());
+        } else return null;
+    }
+
     // Commands
-    public void changeDirectory(String directory, Node current, int accessLevel) {
+    public void changeDirectory(String name, Node current, int accessLevel) {
         if (current.getType() == NodeType.DIRECTORY) {
-            if (isPermitted(current, 'r', accessLevel)) {
-                if (directory.equals("..")) currentFSPosition = current.getParent();
-                else if (current.getName().equals(directory) ||
-                        (directory.equals("~") && current.getName().equals(user)))
+            if (isPermitted(current, 'x', accessLevel)) {
+                if (name.equals("..")) currentFSPosition = current.getParent();
+                else if (current.getName().equals(name) ||
+                        (name.equals("~") && current.getName().equals(user)))
                     currentFSPosition = current;
-                else current.getChildren().forEach(child -> changeDirectory(directory, child, accessLevel));
+                else current.getChildren().forEach(child -> changeDirectory(name, child, accessLevel));
             }
-        } else System.err.println("Destination is no directory.");
+        } else System.err.println(name + " is no directory.");
     }
 
     public void ping(Network network, String ip) {
@@ -189,12 +201,14 @@ public class OS {
         }
     }
 
-    public void list(Node current) {
-        current.getChildren().forEach(child ->
-                System.out.format("%s %s " + child.getName() + "%n",
-                        child.getType().getAbbreviation(),
-                        String.valueOf(child.getPermissions()))
-        );
+    public void list(int accessLevel) {
+        if (isPermitted(currentFSPosition, 'r', accessLevel)) {
+            currentFSPosition.getChildren().forEach(child ->
+                    System.out.format("%s %s " + child.getName() + "%n",
+                            child.getType().getAbbreviation(),
+                            String.valueOf(child.getPermissions()))
+            );
+        }
     }
 
     public void changeMode(String modeChange, String file, Node current, int accessLevel) {
@@ -209,8 +223,41 @@ public class OS {
         }
     }
 
-    // TODO: implement proper check (similar to hack method)
-    public boolean isSudoAllowed(String password) {
-        return password.equals("root");
+    public String readFromFile(String name, int accessLevel) {
+        String out = "";
+        Node file = currentFSPosition.findChildBy(name);
+        if (file != null) {
+            if (isPermitted(file, 'r', accessLevel)) {
+                if (file.getType() == NodeType.FILE)
+                    out = file.getContent();
+                else System.err.println(name + " is no file");
+            }
+        } else System.err.println(name + "does not exist");
+        return out;
+    }
+
+    public void writeToFile(String content, String name, int accessLevel) {
+        if (isPermitted(currentFSPosition, 'w', accessLevel)) {
+            Node file = currentFSPosition.findChildBy(name);
+            if (file != null) {
+                if (file.getType() == NodeType.FILE)
+                    file.setContent(content);
+                else System.err.println(name + " is no file");
+            } else {
+                file = createNode(name, NodeType.FILE);
+                if (file != null) {
+                    file.setContent(content);
+                    currentFSPosition.getChildren().add(file);
+                }
+            }
+        }
+    }
+
+    public void remove(String name, int accessLevel) {
+        if (isPermitted(currentFSPosition, 'x', accessLevel)) {
+            Node node = currentFSPosition.findChildBy(name);
+            if (node != null) currentFSPosition.getChildren().remove(node);
+            else System.err.println("No such file or directory: " + name);
+        }
     }
 }

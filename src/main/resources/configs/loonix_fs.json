@@ -63,7 +63,7 @@
     {
       "name": "etc",
       "type": "d",
-      "permissions": "r--",
+      "permissions": "r-x",
       "children": []
     }
   ]

@@ -9,10 +9,18 @@ public class Node {
     private String name;
     private NodeType type;
     private char[] permissions;
+    private String content;
 
     public Node() {
         children = new LinkedList<>();
         permissions = new char[3];
+    }
+
+    public Node(Node parent, String name, NodeType type, char[] permissions) {
+        this.parent = parent;
+        this.name = name;
+        this.type = type;
+        this.permissions = permissions;
     }
 
     public Node getParent() {
@@ -27,8 +35,15 @@ public class Node {
         return children;
     }
 
-    public void setChildren(List<Node> children) {
-        this.children = children;
+    public Node findChildBy(String name) {
+        Node found = null;
+        for (Node child : children) {
+            if (name.equals(child.name)) {
+                found = child;
+                break;
+            }
+        }
+        return found;
     }
 
     public String getName() {
@@ -55,11 +70,19 @@ public class Node {
         this.permissions = permissions;
     }
 
-    public boolean hasPermisson(char permission) {
-        for (char c : permissions) {
-            if (c == permission) return true;
+    public boolean hasPermission(char permission) {
+        for (char value : permissions) {
+            if (value == permission) return true;
         }
         return false;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     @Override
