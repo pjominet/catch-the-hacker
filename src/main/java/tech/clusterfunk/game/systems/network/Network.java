@@ -1,4 +1,4 @@
-package tech.clusterfunk.game.network;
+package tech.clusterfunk.game.systems.network;
 
 import tech.clusterfunk.game.characters.NPC;
 import tech.clusterfunk.util.exceptions.FatalException;
@@ -6,6 +6,7 @@ import tech.clusterfunk.util.exceptions.InvalidIPException;
 import tech.clusterfunk.util.exceptions.UnknownIPException;
 
 import java.util.Formatter;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -23,11 +24,8 @@ public class Network {
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
+            System.exit(1);
         }
-    }
-
-    public Map<String, Computer> getNetwork() {
-        return network;
     }
 
     public void addComputer(Computer computer) {
@@ -39,6 +37,14 @@ public class Network {
         else throw new FatalException();
     }
 
+    public String getRandomIP() throws FatalException {
+        Iterator<Map.Entry<String, Computer>> i = network.entrySet().iterator();
+        if (i.hasNext()) {
+            Map.Entry<String, Computer> entry = i.next();
+            return entry.getKey();
+        } else throw new FatalException();
+    }
+
     public boolean isComputerAt(String ip) throws InvalidIPException, UnknownIPException {
         if (ip.matches("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}")) {
             for (Map.Entry<String, Computer> entry : network.entrySet()) {
@@ -46,7 +52,7 @@ public class Network {
                     return true;
             }
         } else throw new InvalidIPException("Invalid IP address");
-        throw new UnknownIPException("No Computer found at " + ip);
+        throw new UnknownIPException("Request timed out\n\tNo reachable machine at " + ip);
     }
 
     @Override

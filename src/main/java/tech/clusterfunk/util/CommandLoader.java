@@ -1,6 +1,6 @@
 package tech.clusterfunk.util;
 
-import tech.clusterfunk.game.systems.Command;
+import tech.clusterfunk.game.systems.operatingsystem.Command;
 
 import java.io.BufferedReader;
 import java.io.IOException;

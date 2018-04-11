@@ -1,6 +1,6 @@
-package tech.clusterfunk.game.network;
+package tech.clusterfunk.game.systems.network;
 
-import tech.clusterfunk.game.systems.OS;
+import tech.clusterfunk.game.systems.operatingsystem.OS;
 
 import java.util.Random;
 import java.util.StringJoiner;

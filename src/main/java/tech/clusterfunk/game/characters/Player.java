@@ -1,7 +1,7 @@
 package tech.clusterfunk.game.characters;
 
-import tech.clusterfunk.game.network.Computer;
-import tech.clusterfunk.game.systems.Command;
+import tech.clusterfunk.game.systems.network.Computer;
+import tech.clusterfunk.game.systems.operatingsystem.Command;
 import tech.clusterfunk.util.CommandLoader;
 import tech.clusterfunk.util.exceptions.UnrecognizedCommandException;
 
@@ -37,7 +37,7 @@ public class Player extends Character {
         StringBuilder builder = new StringBuilder();
         builder.append(os).append(": ");
         for (Map.Entry<String, Command> entry : knownCommands.entrySet()) {
-            if (entry.getValue().getOs().equals(os))
+            if (entry.getValue().getOS().equals(os))
                 builder.append(entry.getValue().getName()).append(" ");
         }
         return builder.toString();
@@ -46,7 +46,7 @@ public class Player extends Character {
     public Map<String, Command> getAvailableCommands() {
         Map<String, Command> availableCommands = new ConcurrentHashMap<>();
         for (Map.Entry<String, Command> entry : knownCommands.entrySet()) {
-            if (entry.getValue().getOs().equals(this.computer.getOS().getName()))
+            if (entry.getValue().getOS().equals(this.computer.getOS().getName()))
                 availableCommands.put(entry.getKey(), entry.getValue());
         }
         return availableCommands;

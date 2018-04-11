@@ -6,13 +6,11 @@ import com.diogonunes.jcdp.color.api.Ansi.BColor;
 import com.diogonunes.jcdp.color.api.Ansi.FColor;
 import tech.clusterfunk.game.characters.Hacker;
 import tech.clusterfunk.game.characters.Player;
-import tech.clusterfunk.game.network.Computer;
-import tech.clusterfunk.game.network.Network;
-import tech.clusterfunk.game.systems.OS;
+import tech.clusterfunk.game.systems.network.Computer;
+import tech.clusterfunk.game.systems.network.Network;
+import tech.clusterfunk.game.systems.operatingsystem.OS;
 import tech.clusterfunk.util.CommandLoader;
 import tech.clusterfunk.util.exceptions.FatalException;
-import tech.clusterfunk.util.exceptions.InvalidIPException;
-import tech.clusterfunk.util.exceptions.UnknownIPException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -23,6 +21,7 @@ import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static tech.clusterfunk.Main.CONFIG_ROOT;
+import static tech.clusterfunk.Main.SUDO;
 
 public class Game {
     public static int DIFFICULTY = 0;
@@ -61,17 +60,17 @@ public class Game {
         }
     }
 
-    private void init(String playerName, String playerOs, String playerNick) {
+    private void init(String playerName, String playerOS, String playerUsername) {
         System.out.println(">> Setting up game...");
 
-        Computer playerPC = new Computer(playerOs, playerNick, Integer.valueOf(initConfig.get("player_skill")));
-        player = new Player(playerName, playerPC, Integer.valueOf(initConfig.get("player_skill")));
+        int playerSkill = Integer.valueOf(initConfig.get("player_skill")) - DIFFICULTY;
+        Computer playerPC = new Computer(playerOS, playerUsername, playerSkill);
+        player = new Player(playerName, playerPC, playerSkill);
 
-        Computer hackerPC = new Computer(initConfig.get("blackhat_os"),
-                initConfig.get("blackhat_nick"),
-                Integer.valueOf(initConfig.get("blackhat_diff"))
-        );
-        hacker = new Hacker(initConfig.get("blackhat_name"), hackerPC);
+        int hackerSkill = Integer.valueOf(initConfig.get("hacker_skill")) + DIFFICULTY;
+        Computer hackerPC = new Computer(initConfig.get("hacker_os"),
+                initConfig.get("hacker_username"), hackerSkill);
+        hacker = new Hacker(initConfig.get("hacker_name"), hackerPC);
 
         int networkSize = Integer.valueOf(initConfig.get("network_size")) * (DIFFICULTY + 1);
         network = new Network(networkSize);
@@ -119,21 +118,23 @@ public class Game {
         playerOS.list(playerOS.getCurrentFSPosition());
 
         // change permission
-        playerOS.changeMode("+w", "Program Data", playerOS.getFsRoot(), 6);
+        playerOS.changeMode("+w", "Program Data", playerOS.getFsRoot(), SUDO);
         // list changes
         out.println(playerOS.getCurrentPath() +" > chmod +w Program Data");
         playerOS.list(playerOS.getCurrentFSPosition());
         // revert change permission
-        playerOS.changeMode("-w", "Program Data", playerOS.getFsRoot(), 6);
+        playerOS.changeMode("-w", "Program Data", playerOS.getFsRoot(), SUDO);
         // list changes
         out.println(playerOS.getCurrentPath() +" > chmod -w Program Data");
         playerOS.list(playerOS.getCurrentFSPosition());
         System.out.println();
 
         // ping test
-        System.out.print("Ping Computer: ");
-        String ip = in.next();
-        playerOS.ping(network, ip);
+        try {
+            playerOS.ping(network,network.getRandomIP());
+        } catch (FatalException e) {
+            System.err.println(e.getMessage());
+        }
 
         out.clear();
     }

@@ -1,6 +1,6 @@
 package tech.clusterfunk.game.characters;
 
-import tech.clusterfunk.game.network.Computer;
+import tech.clusterfunk.game.systems.network.Computer;
 
 abstract class Character {
     String name;

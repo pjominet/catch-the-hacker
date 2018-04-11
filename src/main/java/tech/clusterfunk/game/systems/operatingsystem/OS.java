@@ -1,6 +1,6 @@
-package tech.clusterfunk.game.systems;
+package tech.clusterfunk.game.systems.operatingsystem;
 
-import tech.clusterfunk.game.network.Network;
+import tech.clusterfunk.game.systems.network.Network;
 import tech.clusterfunk.game.systems.filesystem.Node;
 import tech.clusterfunk.game.systems.filesystem.NodeType;
 import tech.clusterfunk.util.CommandLoader;
@@ -164,16 +164,27 @@ public class OS {
         } else System.err.println("Destination is no directory.");
     }
 
-    // TODO: add better ping response (more like real ping)
     public void ping(Network network, String ip) {
         if (ip.equals("127.0.0.1"))
             System.err.println("Pinging your own system is somewhat pointless, don't you think?");
         else {
             try {
-                if (network.isComputerAt(ip))
-                    System.out.println("Found active computer at " + ip);
+                if (network.isComputerAt(ip)) {
+                    System.out.println("Pinging " + ip + " with 32 bytes of data:");
+                    for (int i = 0; i < 4; i++) {
+                        System.out.println("\tReply from " + ip + ": bytes=32 time<1ms TTL=64");
+                        // wait for show effect
+                        Thread.sleep(777);
+                    }
+                    System.out.println();
+                    System.out.println("Ping statistics for " + ip + ":");
+                    System.out.println("\tPackets: Sent = 4, Received = 4, Lost = 0 (0% loss)");
+                }
             } catch (InvalidIPException | UnknownIPException e) {
                 System.err.println(e.getMessage());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                System.exit(1);
             }
         }
     }
@@ -186,15 +197,20 @@ public class OS {
         );
     }
 
-    public void changeMode(String modeChange, String name, Node current, int accessLevel) {
+    public void changeMode(String modeChange, String file, Node current, int accessLevel) {
         if (hasPrivilege(accessLevel)) {
-            if (current.getName().equals(name)) {
+            if (current.getName().equals(file)) {
                 char modifier = modeChange.charAt(0);
                 String permissions = modeChange.substring(1);
                 for (int i = 0; i < permissions.length(); i++) {
                     changePermission(modifier, permissions.charAt(i), current);
                 }
-            } else current.getChildren().forEach(child -> changeMode(modeChange, name, child, accessLevel));
+            } else current.getChildren().forEach(child -> changeMode(modeChange, file, child, accessLevel));
         }
+    }
+
+    // TODO: implement proper check (similar to hack method)
+    public boolean isSudoAllowed(String password) {
+        return password.equals("root");
     }
 }

@@ -1,4 +1,4 @@
-package tech.clusterfunk.game.systems;
+package tech.clusterfunk.game.systems.operatingsystem;
 
 import java.util.List;
 import java.util.Objects;
@@ -28,7 +28,7 @@ public class Command {
         return description;
     }
 
-    public String getOs() {
+    public String getOS() {
         return os;
     }
 
@@ -51,7 +51,7 @@ public class Command {
         if (this == o) return true;
         if (!(o instanceof Command)) return false;
         Command command = (Command) o;
-        return Objects.equals(getName(), command.getName()) &&
-                Objects.equals(getOs(), command.getOs());
+        return Objects.equals(this.getName(), command.getName()) &&
+                Objects.equals(this.getOS(), command.getOS());
     }
 }
