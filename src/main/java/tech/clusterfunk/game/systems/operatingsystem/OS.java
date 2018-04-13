@@ -8,6 +8,7 @@ import tech.clusterfunk.util.FilesystemLoader;
 import tech.clusterfunk.util.exceptions.InvalidIPException;
 import tech.clusterfunk.util.exceptions.UnknownIPException;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -361,17 +362,26 @@ public class OS {
 
     /**
      * Copy a source node to a destination node (cp)
+     * If the source node has the same name as the destination node then add "copy-" prefix
      *
      * @param source      node to copy
      * @param destination parent to copy to
      * @param accessLevel to check for
      */
-    public void copy(Node source, Node destination, int accessLevel) {
-        if (isPermitted(source, 'r', accessLevel)) {
-            if (isPermitted(destination, 'w', accessLevel)) {
-                Node copy = createNode(source.getName(), source.getParent(), source.getType(), accessLevel);
-                destination.getChildren().add(copy);
-            }
+    public void copy(String source, String destination, int accessLevel) {
+        Node sourceNode = currentFSPosition.findChildBy(source);
+        if (isPermitted(sourceNode, 'r', accessLevel)) {
+            Node destinationNode = currentFSPosition;
+            if (!destination.equals("./")) destinationNode = fsRoot.findChildBy(destination);
+            if (destinationNode.getType() == NodeType.DIRECTORY) {
+                if (isPermitted(destinationNode, 'w', accessLevel)) {
+                    if (destinationNode.getChildren().contains(sourceNode)) {
+                        source = "copy-" + source;
+                    }
+                    Node copy = createNode(source, sourceNode.getParent(), sourceNode.getType(), accessLevel);
+                    destinationNode.getChildren().add(copy);
+                }
+            } else System.err.println("Destination is no directory");
         }
     }
 }

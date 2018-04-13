@@ -122,34 +122,40 @@ public class Game {
 
         // change permission
         playerOS.changeMode("+w", "Program Data", playerOS.getFsRoot(), SUDO);
-        out.println(playerOS.getCurrentPath() +" > chmod +w Program Data");
+        out.println(playerOS.getCurrentPath() + " > chmod +w Program Data");
         playerOS.list(SUDO);
         System.out.println();
 
         //change directory
-        out.println(playerOS.getCurrentPath() +" > cd Program Data");
+        out.println(playerOS.getCurrentPath() + " > cd Program Data");
         playerOS.changeDirectory("Program Data", playerOS.getFsRoot(), SUDO);
 
         // write to file
-        out.println(playerOS.getCurrentPath() +" > echo \"This is some content\" test.txt");
+        out.println(playerOS.getCurrentPath() + " > echo \"This is some content\" test.txt");
         playerOS.writeToFile("This is some content", "test.txt", SUDO);
         playerOS.list(SUDO);
         System.out.println();
 
         //read from file
-        out.println(playerOS.getCurrentPath() +" > vim test.txt");
+        out.println(playerOS.getCurrentPath() + " > vim test.txt");
         out.println(playerOS.readFromFile("test.txt", SUDO));
         System.out.println();
 
+        // copy test
+        out.println(playerOS.getCurrentPath() + " > cp test.txt ./");
+        playerOS.copy("test.txt", "./", SUDO);
+        playerOS.list(SUDO);
+        System.out.println();
+
         // remove file
-        out.println(playerOS.getCurrentPath() +" > rm test.txt");
-        playerOS.remove("test.txt", SUDO);
+        out.println(playerOS.getCurrentPath() + " > rm copy-test.txt");
+        playerOS.remove("copy-test.txt", SUDO);
         playerOS.list(SUDO);
         System.out.println();
 
         // ping test
         try {
-            playerOS.ping(network,network.getRandomIP());
+            playerOS.ping(network, network.getRandomIP());
         } catch (FatalException e) {
             System.err.println(e.getMessage());
         }
