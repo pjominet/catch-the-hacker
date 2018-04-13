@@ -115,7 +115,7 @@ public class OS {
     // Permission control
 
     /**
-     * Checks if a node can be manipulated
+     * Checks if a node allows be manipulated
      *
      * @param node        to be manipulated
      * @param permission  to check for
@@ -255,7 +255,7 @@ public class OS {
     // Commands
 
     /**
-     * allows to change the current position in the filesystem tree (cd)
+     * Allows to change the current position in the filesystem tree (cd)
      *
      * @param path        to destination directory
      * @param current     recursion iteration
