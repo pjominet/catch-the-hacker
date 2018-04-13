@@ -1,8 +1,8 @@
 package tech.clusterfunk.game.systems.operatingsystem;
 
-import tech.clusterfunk.game.systems.network.Network;
 import tech.clusterfunk.game.systems.filesystem.Node;
 import tech.clusterfunk.game.systems.filesystem.NodeType;
+import tech.clusterfunk.game.systems.network.Network;
 import tech.clusterfunk.util.CommandLoader;
 import tech.clusterfunk.util.FilesystemLoader;
 import tech.clusterfunk.util.exceptions.InvalidIPException;
@@ -46,6 +46,7 @@ public class OS {
 
     /**
      * Replace Generic user from config with actual user
+     *
      * @param current recursion iteration
      */
     private void setCorrectUserHomeFolder(Node current) {
@@ -79,6 +80,7 @@ public class OS {
 
     /**
      * Traverse filesystem tree upwards
+     *
      * @return List
      */
     private List<String> getDirectoriesToRoot() {
@@ -96,6 +98,7 @@ public class OS {
 
     /**
      * build a path to the current filesystem position
+     *
      * @return String
      */
     public String getCurrentPath() {
@@ -113,8 +116,9 @@ public class OS {
 
     /**
      * Checks if a node can be manipulated
-     * @param node to be manipulated
-     * @param permission to check for
+     *
+     * @param node        to be manipulated
+     * @param permission  to check for
      * @param accessLevel to identify privilege level
      * @return boolean
      */
@@ -122,24 +126,24 @@ public class OS {
         if (hasPrivilege(accessLevel)) {
             if (node.hasPermission(permission)) return true;
             else {
-                System.err.println("Permission denied");
+                System.err.println(node.getName() + ": Permission denied");
                 return false;
             }
-        } else return false;
+        } else {
+            System.err.println(node.getName() + ": Not high enough privilege");
+            return false;
+        }
     }
 
     /**
      * Checks if a node is accessible
+     *
      * @param accessLevel to check for
      * @return boolean
      */
     private boolean hasPrivilege(int accessLevel) {
         if (accessLevel == SUDO) return true;
-        else if (accessLevel >= this.accessLevel) return true;
-        else {
-            System.err.println("Not high enough privilege");
-            return false;
-        }
+        else return accessLevel >= this.accessLevel;
     }
 
     // TODO: implement proper check (similar to hack method)
@@ -148,11 +152,13 @@ public class OS {
     }
 
     // helper methods
+
     /**
      * changes a permission on a given node
-     * @param modifier that determines if to add or subtract a permission
+     *
+     * @param modifier   that determines if to add or subtract a permission
      * @param permission in question
-     * @param node to have its permission changed
+     * @param node       to have its permission changed
      */
     private void changePermission(char modifier, char permission, Node node) {
         char[] replacer = node.getPermissions();
@@ -190,22 +196,25 @@ public class OS {
 
     /**
      * Creates a new node in the filesystem tree
-     * @param name of the new node
-     * @param type of the new node
+     *
+     * @param name        of the new node
+     * @param type        of the new node
      * @param accessLevel to check for
      * @return new node
      */
-    private Node createNode(String name, NodeType type, int accessLevel) {
-        if (isPermitted(currentFSPosition, 'w', accessLevel)) {
-            return new Node(currentFSPosition, name, type, currentFSPosition.getPermissions());
+    private Node createNode(String name, Node parent, NodeType type, int accessLevel) {
+        if (isPermitted(parent, 'w', accessLevel)) {
+            return new Node(parent, name, type, parent.getPermissions());
         } else return null;
     }
 
     // Commands
+
     /**
      * allows to change the current position in the filesystem tree (cd)
-     * @param name of destination directory
-     * @param current recursion iteration
+     *
+     * @param name        of destination directory
+     * @param current     recursion iteration
      * @param accessLevel to check for
      */
     public void changeDirectory(String name, Node current, int accessLevel) {
@@ -222,8 +231,9 @@ public class OS {
 
     /**
      * Ping a given address in the network (ping)
+     *
      * @param network in question
-     * @param ip to ping
+     * @param ip      to ping
      */
     public void ping(Network network, String ip) {
         if (ip.equals("127.0.0.1"))
@@ -252,6 +262,7 @@ public class OS {
 
     /**
      * List all direct child node of the current filesystem position (ls)
+     *
      * @param accessLevel to check for
      */
     public void list(int accessLevel) {
@@ -266,9 +277,10 @@ public class OS {
 
     /**
      * Change permission modes of a given node (chmod)
-     * @param modeChange param required from command
-     * @param file param required from command
-     * @param current recursion iteration
+     *
+     * @param modeChange  param required from command
+     * @param file        param required from command
+     * @param current     recursion iteration
      * @param accessLevel to check for
      */
     public void changeMode(String modeChange, String file, Node current, int accessLevel) {
@@ -285,7 +297,8 @@ public class OS {
 
     /**
      * Read and return contents of a file (vim)
-     * @param name of the file
+     *
+     * @param name        of the file
      * @param accessLevel to check for
      * @return String
      */
@@ -304,40 +317,60 @@ public class OS {
 
     /**
      * Write content to a file, if the file does not exist, a new one is created (echo)
-     * @param content to write to the file
-     * @param name of the file
+     *
+     * @param content     to write to the file
+     * @param name        of the file
      * @param accessLevel to check for
      */
     public void writeToFile(String content, String name, int accessLevel) {
-        if (isPermitted(currentFSPosition, 'w', accessLevel)) {
-            Node file = currentFSPosition.findChildBy(name);
-            if (file != null) {
+        Node file = currentFSPosition.findChildBy(name);
+        if (file != null) {
+            if (isPermitted(file, 'w', accessLevel)) {
                 if (file.getType() == NodeType.FILE)
                     file.setContent(content);
                 else System.err.println(name + " is no file");
-            } else {
-                file = createNode(name, NodeType.FILE, accessLevel);
+            }
+        } else {
+            if (isPermitted(currentFSPosition, 'w', accessLevel)) {
+                file = createNode(name, currentFSPosition, NodeType.FILE, accessLevel);
                 if (file != null) {
                     file.setContent(content);
                     currentFSPosition.getChildren().add(file);
-                }
+                } else System.err.println("Could not create new file");
             }
         }
     }
 
     /**
      * Remove a child node from current node in filesystem tree (rm)
-     * @param name of the node to remove
+     *
+     * @param name        of the node to remove
      * @param accessLevel to check for
      */
     public void remove(String name, int accessLevel) {
-        if (isPermitted(currentFSPosition, 'x', accessLevel)) {
-            if (currentFSPosition == fsRoot)
-                System.out.println("You cannot delete root nor its children, stop trying to destroy the system!");
-            else {
-                Node node = currentFSPosition.findChildBy(name);
-                if (node != null) currentFSPosition.getChildren().remove(node);
-                else System.err.println("No such file or directory: " + name);
+        if (currentFSPosition == fsRoot)
+            System.out.println("You cannot delete root nor its children, stop trying to destroy the system!");
+        else {
+            Node node = currentFSPosition.findChildBy(name);
+            if (node != null) {
+                if (isPermitted(node, 'x', accessLevel))
+                    currentFSPosition.getChildren().remove(node);
+            } else System.err.println("No such file or directory: " + name);
+        }
+    }
+
+    /**
+     * Copy a source node to a destination node (cp)
+     *
+     * @param source      node to copy
+     * @param destination parent to copy to
+     * @param accessLevel to check for
+     */
+    public void copy(Node source, Node destination, int accessLevel) {
+        if (isPermitted(source, 'r', accessLevel)) {
+            if (isPermitted(destination, 'w', accessLevel)) {
+                Node copy = createNode(source.getName(), source.getParent(), source.getType(), accessLevel);
+                destination.getChildren().add(copy);
             }
         }
     }
