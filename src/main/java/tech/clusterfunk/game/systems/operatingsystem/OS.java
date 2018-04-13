@@ -398,10 +398,9 @@ public class OS {
      * @param accessLevel to check for
      */
     public void remove(String path, int accessLevel) {
-        System.out.println(getPathTerminus(path));
         Node node = findNodeBy(getPathTerminus(path), fsRoot);
         if (node == fsRoot)
-            System.out.println("You cannot delete root nor its children, stop trying to destroy the system!");
+            System.err.println("You cannot delete root nor its children, stop trying to destroy the system!");
         else if (node != null) {
             if (!node.getChildren().isEmpty()) {
                 System.err.println(path + " is not empty");
@@ -411,7 +410,6 @@ public class OS {
                 else System.err.println("No such file or directory: " + path);
             }
         }
-
     }
 
     /**
@@ -424,7 +422,6 @@ public class OS {
      */
     public void copy(String sourcePath, String destinationPath, int accessLevel) {
         String sourceName = getPathTerminus(sourcePath);
-        System.out.println(sourceName);
         Node source = findNodeBy(sourceName, fsRoot);
         if (source != null) {
             if (isPermitted(source, 'r', accessLevel)) {
