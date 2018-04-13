@@ -8,7 +8,6 @@ import tech.clusterfunk.util.FilesystemLoader;
 import tech.clusterfunk.util.exceptions.InvalidIPException;
 import tech.clusterfunk.util.exceptions.UnknownIPException;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -209,25 +208,69 @@ public class OS {
         } else return null;
     }
 
+    /**
+     * Isolate the terminal node from a path string
+     *
+     * @param path to manipulate
+     * @return String
+     */
+    private String getPathTerminus(String path) {
+        if (path.contains("/"))
+            return path.substring(path.lastIndexOf("/") + 1);
+        else return path;
+    }
+
+    /**
+     * Retrieve the parent node of the terminal path node
+     *
+     * @param path to manipulate
+     * @return String
+     */
+    private String cutPathTerminus(String path) {
+        if (path.contains("/"))
+            return path.substring(0, path.lastIndexOf("/"));
+        else return "./";
+    }
+
+    /**
+     * Find a node by its name
+     *
+     * @param name    of the node to find
+     * @param current recursion iteration
+     * @return Node
+     */
+    private Node findNodeBy(String name, Node current) {
+        if (current.getName().equals(name)) return current;
+        else {
+            for (Node child : current.getChildren()) {
+                Node found = findNodeBy(name, child);
+                if (found != null) {
+                    return found;
+                }
+            }
+        }
+        return null;
+    }
+
     // Commands
 
     /**
      * allows to change the current position in the filesystem tree (cd)
      *
-     * @param name        of destination directory
+     * @param path        to destination directory
      * @param current     recursion iteration
      * @param accessLevel to check for
      */
-    public void changeDirectory(String name, Node current, int accessLevel) {
+    public void changeDirectory(String path, Node current, int accessLevel) {
         if (current.getType() == NodeType.DIRECTORY) {
             if (isPermitted(current, 'x', accessLevel)) {
-                if (name.equals("..")) currentFSPosition = current.getParent();
-                else if (current.getName().equals(name) ||
-                        (name.equals("~") && current.getName().equals(user)))
+                if (path.equals("..")) currentFSPosition = current.getParent();
+                else if ((path.equals("~") && current.getName().equals(user)) ||
+                        current.getName().equals(getPathTerminus(path)))
                     currentFSPosition = current;
-                else current.getChildren().forEach(child -> changeDirectory(name, child, accessLevel));
+                else current.getChildren().forEach(child -> changeDirectory(path, child, accessLevel));
             }
-        } else System.err.println(name + " is no directory.");
+        } else System.err.println(path + " is no valid path.");
     }
 
     /**
@@ -280,39 +323,40 @@ public class OS {
      * Change permission modes of a given node (chmod)
      *
      * @param modeChange  param required from command
-     * @param file        param required from command
+     * @param path        param required from command
      * @param current     recursion iteration
      * @param accessLevel to check for
      */
-    public void changeMode(String modeChange, String file, Node current, int accessLevel) {
+    public void changeMode(String modeChange, String path, Node current, int accessLevel) {
         if (hasPrivilege(accessLevel)) {
-            if (current.getName().equals(file)) {
+            if (current.getName().equals(getPathTerminus(path)) || path.equals("./")) {
                 char modifier = modeChange.charAt(0);
                 String permissions = modeChange.substring(1);
                 for (int i = 0; i < permissions.length(); i++) {
                     changePermission(modifier, permissions.charAt(i), current);
                 }
-            } else current.getChildren().forEach(child -> changeMode(modeChange, file, child, accessLevel));
+            } else current.getChildren().forEach(child -> changeMode(modeChange, path, child, accessLevel));
         }
     }
 
     /**
      * Read and return contents of a file (vim)
      *
-     * @param name        of the file
+     * @param path        to the file
      * @param accessLevel to check for
      * @return String
      */
-    public String readFromFile(String name, int accessLevel) {
+    public String readFromFile(String path, int accessLevel) {
         String out = "";
-        Node file = currentFSPosition.findChildBy(name);
+        String fileName = getPathTerminus(path);
+        Node file = findNodeBy(fileName, fsRoot);
         if (file != null) {
             if (isPermitted(file, 'r', accessLevel)) {
                 if (file.getType() == NodeType.FILE)
                     out = file.getContent();
-                else System.err.println(name + " is no file");
+                else System.err.println(fileName + " is no file");
             }
-        } else System.err.println(name + "does not exist");
+        } else System.err.println(fileName + " does not exist");
         return out;
     }
 
@@ -320,68 +364,84 @@ public class OS {
      * Write content to a file, if the file does not exist, a new one is created (echo)
      *
      * @param content     to write to the file
-     * @param name        of the file
+     * @param path        to the file
      * @param accessLevel to check for
      */
-    public void writeToFile(String content, String name, int accessLevel) {
-        Node file = currentFSPosition.findChildBy(name);
+    public void writeToFile(String content, String path, int accessLevel) {
+        String fileName = getPathTerminus(path);
+        Node file = findNodeBy(fileName, fsRoot);
         if (file != null) {
-            if (isPermitted(file, 'w', accessLevel)) {
-                if (file.getType() == NodeType.FILE)
+            if (file.getType() == NodeType.FILE) {
+                if (isPermitted(file, 'w', accessLevel))
                     file.setContent(content);
-                else System.err.println(name + " is no file");
-            }
+            } else System.err.println(fileName + " is no file");
         } else {
-            if (isPermitted(currentFSPosition, 'w', accessLevel)) {
-                file = createNode(name, currentFSPosition, NodeType.FILE, accessLevel);
-                if (file != null) {
-                    file.setContent(content);
-                    currentFSPosition.getChildren().add(file);
-                } else System.err.println("Could not create new file");
-            }
+            String parentPath = cutPathTerminus(path);
+            Node parent = currentFSPosition;
+            if (!parentPath.equals("./")) parent = findNodeBy(parentPath, fsRoot);
+            if (parent != null) {
+                if (isPermitted(parent, 'w', accessLevel)) {
+                    file = createNode(fileName, parent, NodeType.FILE, accessLevel);
+                    if (file != null) {
+                        file.setContent(content);
+                        parent.getChildren().add(file);
+                    } else System.err.println("Could not create new file");
+                }
+            } else System.err.println(path + " is no valid path");
         }
     }
 
     /**
      * Remove a child node from current node in filesystem tree (rm)
      *
-     * @param name        of the node to remove
+     * @param path        to the node to remove
      * @param accessLevel to check for
      */
-    public void remove(String name, int accessLevel) {
-        if (currentFSPosition == fsRoot)
+    public void remove(String path, int accessLevel) {
+        System.out.println(getPathTerminus(path));
+        Node node = findNodeBy(getPathTerminus(path), fsRoot);
+        if (node == fsRoot)
             System.out.println("You cannot delete root nor its children, stop trying to destroy the system!");
-        else {
-            Node node = currentFSPosition.findChildBy(name);
-            if (node != null) {
+        else if (node != null) {
+            if (!node.getChildren().isEmpty()) {
+                System.err.println(path + " is not empty");
+            } else {
                 if (isPermitted(node, 'x', accessLevel))
-                    currentFSPosition.getChildren().remove(node);
-            } else System.err.println("No such file or directory: " + name);
+                    node.getParent().getChildren().remove(node);
+                else System.err.println("No such file or directory: " + path);
+            }
         }
+
     }
 
     /**
      * Copy a source node to a destination node (cp)
      * If the source node has the same name as the destination node then add "copy-" prefix
      *
-     * @param source      node to copy
-     * @param destination parent to copy to
-     * @param accessLevel to check for
+     * @param sourcePath      node to copy
+     * @param destinationPath parent to copy to
+     * @param accessLevel     to check for
      */
-    public void copy(String source, String destination, int accessLevel) {
-        Node sourceNode = currentFSPosition.findChildBy(source);
-        if (isPermitted(sourceNode, 'r', accessLevel)) {
-            Node destinationNode = currentFSPosition;
-            if (!destination.equals("./")) destinationNode = fsRoot.findChildBy(destination);
-            if (destinationNode.getType() == NodeType.DIRECTORY) {
-                if (isPermitted(destinationNode, 'w', accessLevel)) {
-                    if (destinationNode.getChildren().contains(sourceNode)) {
-                        source = "copy-" + source;
-                    }
-                    Node copy = createNode(source, sourceNode.getParent(), sourceNode.getType(), accessLevel);
-                    destinationNode.getChildren().add(copy);
+    public void copy(String sourcePath, String destinationPath, int accessLevel) {
+        String sourceName = getPathTerminus(sourcePath);
+        System.out.println(sourceName);
+        Node source = findNodeBy(sourceName, fsRoot);
+        if (source != null) {
+            if (isPermitted(source, 'r', accessLevel)) {
+                Node destination = currentFSPosition;
+                if (!destinationPath.equals("./")) destination = findNodeBy(getPathTerminus(destinationPath), fsRoot);
+                if (destination != null) {
+                    if (destination.getType() == NodeType.DIRECTORY) {
+                        if (isPermitted(destination, 'w', accessLevel)) {
+                            if (destination.getChildren().contains(source)) {
+                                sourceName = "copy-" + sourceName;
+                            }
+                            Node copy = createNode(sourceName, source.getParent(), source.getType(), accessLevel);
+                            destination.getChildren().add(copy);
+                        }
+                    } else System.err.println("Destination is no directory");
                 }
-            } else System.err.println("Destination is no directory");
-        }
+            }
+        } else System.err.println(sourcePath + " does not exist");
     }
 }

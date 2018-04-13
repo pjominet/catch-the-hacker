@@ -18,6 +18,7 @@ public class Node {
 
     public Node(Node parent, String name, NodeType type, char[] permissions) {
         this.parent = parent;
+        children = new LinkedList<>();
         this.name = name;
         this.type = type;
         this.permissions = permissions;
