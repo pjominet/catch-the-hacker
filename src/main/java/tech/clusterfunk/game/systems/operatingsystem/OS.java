@@ -325,17 +325,20 @@ public class OS {
         }
     }
 
-    // TODO: exclude the possibility to delete filesystem root and its direct children
     /**
-     * Remove a node from filesystem tree (rm)
+     * Remove a child node from current node in filesystem tree (rm)
      * @param name of the node to remove
      * @param accessLevel to check for
      */
     public void remove(String name, int accessLevel) {
         if (isPermitted(currentFSPosition, 'x', accessLevel)) {
-            Node node = currentFSPosition.findChildBy(name);
-            if (node != null) currentFSPosition.getChildren().remove(node);
-            else System.err.println("No such file or directory: " + name);
+            if (currentFSPosition == fsRoot)
+                System.out.println("You cannot delete root nor its children, stop trying to destroy the system!");
+            else {
+                Node node = currentFSPosition.findChildBy(name);
+                if (node != null) currentFSPosition.getChildren().remove(node);
+                else System.err.println("No such file or directory: " + name);
+            }
         }
     }
 }
