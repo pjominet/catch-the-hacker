@@ -31,7 +31,7 @@ public class CommandLoader {
                 m = regex.matcher(line);
                 if (m.find()) {
                     List<String> params = new ArrayList<>(Arrays.asList(m.group(2).split(",")));
-                    commandSet.add(new Command(m.group(1), params, m.group(2), os));
+                    commandSet.add(new Command(m.group(1), params, m.group(3), os));
                 }
             }
         } catch (IOException e) {
