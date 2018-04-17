@@ -103,7 +103,6 @@ public class Game {
         System.out.println();
 
         // debug stats
-        /*
         out.println("--- Player stats ---", Attribute.BOLD, FColor.CYAN, BColor.BLACK);
         out.clear();
         out.println(player.toString());
@@ -117,9 +116,9 @@ public class Game {
         out.println("--- Network map ---", Attribute.BOLD, FColor.CYAN, BColor.BLACK);
         out.clear();
         out.println(network.toString());
-        */
 
         /* command simulation for debugging */
+        out.println("--- Command simulation on Player OS ---");
         // list
         out.println(playerOS.getCurrentPath() + " > dir");
         execute("dir", playerOS, SUDO);
