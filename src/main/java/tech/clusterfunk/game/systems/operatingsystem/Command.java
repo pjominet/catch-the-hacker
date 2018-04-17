@@ -32,6 +32,9 @@ public class Command {
         return os;
     }
 
+    public int getParamNbr() {
+        return params.size();
+    }
 
     @Override
     public String toString() {

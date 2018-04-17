@@ -30,7 +30,9 @@ public class CommandLoader {
             for (String line; (line = reader.readLine()) != null; ) {
                 m = regex.matcher(line);
                 if (m.find()) {
-                    List<String> params = new ArrayList<>(Arrays.asList(m.group(2).split(",")));
+                    List<String> params = new ArrayList<>();
+                    if (!m.group(2).equals(""))
+                         params = new ArrayList<>(Arrays.asList(m.group(2).split(",")));
                     commandSet.add(new Command(m.group(1), params, m.group(3), os));
                 }
             }

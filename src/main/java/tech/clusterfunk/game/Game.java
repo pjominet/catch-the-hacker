@@ -8,6 +8,7 @@ import tech.clusterfunk.game.characters.Hacker;
 import tech.clusterfunk.game.characters.Player;
 import tech.clusterfunk.game.systems.network.Computer;
 import tech.clusterfunk.game.systems.network.Network;
+import tech.clusterfunk.game.systems.operatingsystem.Command;
 import tech.clusterfunk.game.systems.operatingsystem.OS;
 import tech.clusterfunk.util.CommandLoader;
 import tech.clusterfunk.util.exceptions.FatalException;
@@ -16,9 +17,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static tech.clusterfunk.Main.CONFIG_ROOT;
 import static tech.clusterfunk.Main.SUDO;
@@ -116,46 +121,46 @@ public class Game {
 
         /* command simulation for debugging */
         // list
-        out.println(playerOS.getCurrentPath() + " > ls");
-        playerOS.list(SUDO);
+        out.println(playerOS.getCurrentPath() + " > dir");
+        execute("dir", playerOS, SUDO);
         System.out.println();
 
         // change permission
-        playerOS.changeMode("+w", "Program Data", playerOS.getFsRoot(), SUDO);
-        out.println(playerOS.getCurrentPath() + " > chmod +w Program Data");
-        playerOS.list(SUDO);
+        out.println(playerOS.getCurrentPath() + " > mode +w \"Program Data\"");
+        execute("mode +w \"Program Data\"", playerOS, SUDO);
+        execute("dir", playerOS, SUDO);
         System.out.println();
 
         //change directory
-        out.println(playerOS.getCurrentPath() + " > cd Program Data");
-        playerOS.changeDirectory("Program Data", playerOS.getFsRoot(), SUDO);
+        out.println(playerOS.getCurrentPath() + " > chdir \"Program Data\"");
+        execute("chdir \"Program Data\"", playerOS, SUDO);
 
         // write to file
         out.println(playerOS.getCurrentPath() + " > echo \"This is some content\" test.txt");
-        playerOS.writeToFile("This is some content", "test.txt", SUDO);
-        playerOS.list(SUDO);
+        execute("echo \"This is some content\" test.txt", playerOS, SUDO);
+        execute("dir", playerOS, SUDO);
         System.out.println();
 
         //read from file
-        out.println(playerOS.getCurrentPath() + " > vim test.txt");
-        out.println(playerOS.readFromFile("test.txt", SUDO));
+        out.println(playerOS.getCurrentPath() + " > note test.txt");
+        execute("note test.txt", playerOS, SUDO);
         System.out.println();
 
         // copy test
-        out.println(playerOS.getCurrentPath() + " > cp test.txt ./");
-        playerOS.copy("test.txt", "./", SUDO);
-        playerOS.list(SUDO);
+        out.println(playerOS.getCurrentPath() + " > copy test.txt ./");
+        execute("copy test.txt ./", playerOS, SUDO);
+        execute("dir", playerOS, SUDO);
         System.out.println();
 
         // remove file
-        out.println(playerOS.getCurrentPath() + " > rm copy-test.txt");
-        playerOS.remove("copy-test.txt", SUDO);
-        playerOS.list(SUDO);
+        out.println(playerOS.getCurrentPath() + " > del copy-test.txt");
+        execute("del copy-test.txt", playerOS, SUDO);
+        execute("dir", playerOS, SUDO);
         System.out.println();
 
         // ping test
         try {
-            playerOS.ping(network, network.getRandomIP());
+            execute("ping " + network.getRandomIP(), playerOS, SUDO);
         } catch (FatalException e) {
             System.err.println(e.getMessage());
         }
@@ -202,5 +207,81 @@ public class Game {
 
         out.clear();
         return command;
+    }
+
+    /**
+     * Execute input commandline from user
+     *
+     * @param commandLine input
+     * @param activeOS    from current computer
+     * @param accessLevel to check for
+     */
+    private void execute(String commandLine, OS activeOS, int accessLevel) {
+        List<String> cmdTokens = commandLineSplitter(commandLine);
+        String cmdName = cmdTokens.get(0);
+        Command command;
+        if (activeOS.hasCommand(cmdName)) {
+            command = activeOS.getFromCommandSet(cmdName);
+            if (cmdTokens.size() == 2
+                    && (cmdTokens.get(1).equals("-h") || cmdTokens.get(1).equals("help"))) {
+                System.out.println(command.getDescription());
+            } else {
+                if (cmdTokens.size() - 1 != command.getParamNbr())
+                    System.err.println("Missing params");
+                else {
+                    switch (cmdName) {
+                        case "ls":
+                        case "dir":
+                        case "ld":
+                            activeOS.list(accessLevel);
+                            break;
+                        case "cd":
+                        case "chdir":
+                            activeOS.changeDirectory(cmdTokens.get(1), activeOS.getCurrentFSPosition(), accessLevel);
+                            break;
+                        case "cp":
+                        case "copy":
+                        case "cpy":
+                            activeOS.copy(cmdTokens.get(1), cmdTokens.get(2), accessLevel);
+                            break;
+                        case "rm":
+                        case "del":
+                        case "rem":
+                            activeOS.remove(cmdTokens.get(1), accessLevel);
+                            break;
+                        case "ping":
+                            activeOS.ping(network, cmdTokens.get(1));
+                            break;
+                        case "vim":
+                        case "note":
+                        case "nano":
+                            System.out.println(activeOS.readFromFile(cmdTokens.get(1), accessLevel));
+                            break;
+                        case "echo":
+                            activeOS.writeToFile(cmdTokens.get(1), cmdTokens.get(2), accessLevel);
+                            break;
+                        case "chmod":
+                        case "mode":
+                        case "perm":
+                            activeOS.changeMode(cmdTokens.get(1), cmdTokens.get(2), activeOS.getFsRoot(), accessLevel);
+                            break;
+                    }
+                }
+            }
+        } else System.err.println(cmdName + " is not recognized as an internal or external command");
+    }
+
+    /**
+     * Splits the input commandline at whitespace except if surrounded by quotes
+     *
+     * @param commandLine input
+     * @return List
+     */
+    private List<String> commandLineSplitter(String commandLine) {
+        List<String> cmdTokens = new ArrayList<>();
+        Matcher m = Pattern.compile("([^\"]\\S*|\".+?\")\\s*").matcher(commandLine);
+        while (m.find())
+            cmdTokens.add(m.group(1).replace("\"", ""));
+        return cmdTokens;
     }
 }
