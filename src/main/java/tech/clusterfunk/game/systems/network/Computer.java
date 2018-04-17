@@ -2,6 +2,8 @@ package tech.clusterfunk.game.systems.network;
 
 import tech.clusterfunk.game.systems.operatingsystem.OS;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.StringJoiner;
 
@@ -11,9 +13,10 @@ import static tech.clusterfunk.game.Game.DIFFICULTY;
 public class Computer {
     private String ip;
     private OS os;
+    private List<String> knownHosts;
 
     private String randomIPAddress() {
-        int min = 1;
+        int min = 10;
         int max = 250;
         Random rnd = new Random(System.currentTimeMillis());
         StringJoiner joiner = new StringJoiner(".");
@@ -38,11 +41,13 @@ public class Computer {
     public Computer(String user) {
         this.ip = randomIPAddress();
         this.os = randomOS(user);
+        this.knownHosts = new ArrayList<>();
     }
 
     public Computer(String osName, String user, int accessLevel) {
         this.ip = randomIPAddress();
         this.os = new OS(osName, user, accessLevel);
+        this.knownHosts = new ArrayList<>();
     }
 
     public String getIP() {
@@ -51,6 +56,10 @@ public class Computer {
 
     public OS getOS() {
         return os;
+    }
+
+    public void setKnownHosts(List<String> knownHosts) {
+        this.knownHosts = knownHosts;
     }
 
     public void installNewOS(String osName, String user, int accessLevel) {

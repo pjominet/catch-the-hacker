@@ -11,7 +11,6 @@ import tech.clusterfunk.game.systems.network.Network;
 import tech.clusterfunk.game.systems.operatingsystem.Command;
 import tech.clusterfunk.game.systems.operatingsystem.OS;
 import tech.clusterfunk.util.CommandLoader;
-import tech.clusterfunk.util.exceptions.FatalException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -158,11 +157,7 @@ public class Game {
         System.out.println();
 
         // ping test
-        try {
-            execute("ping " + network.getRandomIP(), playerOS, SUDO);
-        } catch (FatalException e) {
-            System.err.println(e.getMessage());
-        }
+        execute("ping " + network.getRandomIP(), playerOS, SUDO);
 
         out.clear();
     }

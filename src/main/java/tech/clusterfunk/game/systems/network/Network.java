@@ -5,10 +5,10 @@ import tech.clusterfunk.util.exceptions.FatalException;
 import tech.clusterfunk.util.exceptions.InvalidIPException;
 import tech.clusterfunk.util.exceptions.UnknownIPException;
 
-import java.util.Formatter;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+
+import static tech.clusterfunk.game.Game.DIFFICULTY;
 
 public class Network {
     private Map<String, Computer> network;
@@ -32,26 +32,46 @@ public class Network {
         network.put(computer.getIP(), computer);
     }
 
-    public Computer getComputerByIP(String ip) throws InvalidIPException, UnknownIPException, FatalException {
+    public Computer getComputerByIP(String ip) throws UnknownIPException {
         if (isComputerAt(ip)) return network.get(ip);
-        else throw new FatalException();
+        else return null;
     }
 
-    public String getRandomIP() throws FatalException {
+    public String getRandomIP() {
+        Random generator = new Random();
+        Object[] values = network.values().toArray();
+        return (String) values[generator.nextInt(values.length)];
+    }
+
+    private void createMeshTopology() {
         Iterator<Map.Entry<String, Computer>> i = network.entrySet().iterator();
         if (i.hasNext()) {
             Map.Entry<String, Computer> entry = i.next();
-            return entry.getKey();
-        } else throw new FatalException();
+            List<String> knownHosts = new ArrayList<>();
+            for (int j = 0; j < 4 - DIFFICULTY; j++) {
+                knownHosts.add(getRandomIP());
+                entry.getValue().setKnownHosts(knownHosts);
+            }
+        }
     }
 
-    public boolean isComputerAt(String ip) throws InvalidIPException, UnknownIPException {
-        if (ip.matches("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}")) {
-            for (Map.Entry<String, Computer> entry : network.entrySet()) {
-                if (ip.equals(entry.getKey()))
-                    return true;
+    private boolean isValidIP(String ip) throws InvalidIPException {
+        if (ip.matches("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}"))
+            return true;
+        else throw new InvalidIPException("Invalid IP address");
+    }
+
+    public boolean isComputerAt(String ip) throws UnknownIPException {
+        try {
+            if (isValidIP(ip)) {
+                for (Map.Entry<String, Computer> entry : network.entrySet()) {
+                    if (ip.equals(entry.getKey()))
+                        return true;
+                }
             }
-        } else throw new InvalidIPException("Invalid IP address");
+        } catch (InvalidIPException e) {
+            System.err.println(e.getMessage());
+        }
         throw new UnknownIPException("Request timed out\n\tNo reachable machine at " + ip);
     }
 
