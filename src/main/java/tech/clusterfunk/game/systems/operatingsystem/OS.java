@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static tech.clusterfunk.Main.SUDO;
+import static tech.clusterfunk.Main.*;
 
 public class OS {
     private String name;
@@ -100,13 +100,14 @@ public class OS {
      *
      * @return String
      */
-    public String getCurrentPath() {
+    public String getCurrentPrompt() {
         StringBuilder builder = new StringBuilder();
         getDirectoriesToRoot().forEach(name -> {
             builder.append(name);
             if (!name.equals("/"))
                 builder.append("/");
         });
+        builder.append(" > ");
 
         return builder.toString();
     }
@@ -125,11 +126,11 @@ public class OS {
         if (hasPrivilege(accessLevel)) {
             if (node.hasPermission(permission)) return true;
             else {
-                System.err.println(node.getName() + ": Permission denied");
+                err.println(node.getName() + ": Permission denied");
                 return false;
             }
         } else {
-            System.err.println(node.getName() + ": Not high enough privilege");
+            err.println(node.getName() + ": Not high enough privilege");
             return false;
         }
     }
@@ -269,7 +270,7 @@ public class OS {
                     currentFSPosition = current;
                 else current.getChildren().forEach(child -> changeDirectory(path, child, accessLevel));
             }
-        } else System.err.println(path + " is no valid path.");
+        } else err.println(path + " is no valid path.");
     }
 
     /**
@@ -280,22 +281,22 @@ public class OS {
      */
     public void ping(Network network, String ip) {
         if (ip.equals("127.0.0.1"))
-            System.err.println("Pinging your own system is somewhat pointless, don't you think?");
+            err.println("Pinging your own system is somewhat pointless, don't you think?");
         else {
             try {
                 if (network.isComputerAt(ip)) {
-                    System.out.println("Pinging " + ip + " with 32 bytes of data:");
+                    out.println("Pinging " + ip + " with 32 bytes of data:");
                     for (int i = 0; i < 4; i++) {
-                        System.out.println("\tReply from " + ip + ": bytes=32 time<1ms TTL=64");
+                        out.println("\tReply from " + ip + ": bytes=32 time<1ms TTL=64");
                         // wait for show effect
                         Thread.sleep(777);
                     }
-                    System.out.println();
-                    System.out.println("Ping statistics for " + ip + ":");
-                    System.out.println("\tPackets: Sent = 4, Received = 4, Lost = 0 (0% loss)");
+                    out.println();
+                    out.println("Ping statistics for " + ip + ":");
+                    out.println("\tPackets: Sent = 4, Received = 4, Lost = 0 (0% loss)");
                 }
             } catch (UnknownIPException e) {
-                System.err.println(e.getMessage());
+                err.println(e.getMessage());
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 System.exit(1);
@@ -311,7 +312,7 @@ public class OS {
     public void list(int accessLevel) {
         if (isPermitted(currentFSPosition, 'r', accessLevel)) {
             currentFSPosition.getChildren().forEach(child ->
-                    System.out.format("%s %s " + child.getName() + "%n",
+                    out.format("%s %s " + child.getName() + "%n",
                             child.getType().getAbbreviation(),
                             String.valueOf(child.getPermissions()))
             );
@@ -350,10 +351,10 @@ public class OS {
         if (file != null) {
             if (isPermitted(file, 'r', accessLevel)) {
                 if (file.getType() == NodeType.FILE)
-                    System.out.print(file.getContent());
-                else System.err.println(fileName + " is no file");
+                    out.print(file.getContent());
+                else err.println(fileName + " is no file");
             }
-        } else System.err.println(fileName + " does not exist");
+        } else err.println(fileName + " does not exist");
     }
 
     /**
@@ -370,7 +371,7 @@ public class OS {
             if (file.getType() == NodeType.FILE) {
                 if (isPermitted(file, 'w', accessLevel))
                     file.setContent(content);
-            } else System.err.println(fileName + " is no file");
+            } else err.println(fileName + " is no file");
         } else {
             String parentPath = cutPathTerminus(path);
             Node parent = currentFSPosition;
@@ -381,9 +382,9 @@ public class OS {
                     if (file != null) {
                         file.setContent(content);
                         parent.getChildren().add(file);
-                    } else System.err.println("Could not create new file");
+                    } else err.println("Could not create new file");
                 }
-            } else System.err.println(path + " is no valid path");
+            } else err.println(path + " is no valid path");
         }
     }
 
@@ -396,14 +397,14 @@ public class OS {
     public void remove(String path, int accessLevel) {
         Node node = findNodeBy(getPathTerminus(path), fsRoot);
         if (node == fsRoot)
-            System.err.println("You cannot delete root nor its children, stop trying to destroy the system!");
+            err.println("You cannot delete root nor its children, stop trying to destroy the system!");
         else if (node != null) {
             if (!node.getChildren().isEmpty()) {
-                System.err.println(path + " is not empty");
+                err.println(path + " is not empty");
             } else {
                 if (isPermitted(node, 'x', accessLevel))
                     node.getParent().getChildren().remove(node);
-                else System.err.println("No such file or directory: " + path);
+                else err.println("No such file or directory: " + path);
             }
         }
     }
@@ -432,13 +433,13 @@ public class OS {
                             Node copy = createNode(sourceName, source.getParent(), source.getType(), accessLevel);
                             destination.getChildren().add(copy);
                         }
-                    } else System.err.println("Destination is no directory");
+                    } else err.println("Destination is no directory");
                 }
             }
-        } else System.err.println(sourcePath + " does not exist");
+        } else err.println(sourcePath + " does not exist");
     }
 
     public void networkMap(Network network) {
-        System.out.print(network.toString());
+        out.print(network.toString());
     }
 }

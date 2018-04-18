@@ -13,6 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static tech.clusterfunk.Main.CONFIG_ROOT;
+import static tech.clusterfunk.Main.err;
 
 public class CommandLoader {
 
@@ -37,7 +38,7 @@ public class CommandLoader {
                 }
             }
         } catch (IOException e) {
-            System.err.println("File not found: " + config);
+            err.println("File not found: " + config);
             System.exit(1);
         }
         return commandSet;
@@ -70,7 +71,7 @@ public class CommandLoader {
                 }
             }
         } catch (IOException e) {
-            System.err.println("File not found: " + config);
+            err.println("File not found: " + config);
             System.exit(1);
         }
         return defaultCommands;

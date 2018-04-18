@@ -1,9 +1,5 @@
 package tech.clusterfunk.game;
 
-import com.diogonunes.jcdp.color.ColoredPrinter;
-import com.diogonunes.jcdp.color.api.Ansi.Attribute;
-import com.diogonunes.jcdp.color.api.Ansi.BColor;
-import com.diogonunes.jcdp.color.api.Ansi.FColor;
 import tech.clusterfunk.game.characters.Hacker;
 import tech.clusterfunk.game.characters.Player;
 import tech.clusterfunk.game.systems.network.Computer;
@@ -19,13 +15,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static tech.clusterfunk.Main.CONFIG_ROOT;
-import static tech.clusterfunk.Main.SUDO;
+import static tech.clusterfunk.Main.*;
 
 public class Game {
     public static int DIFFICULTY = 0;
@@ -35,15 +29,11 @@ public class Game {
     private Hacker hacker;
     private Network network;
 
-    private ColoredPrinter out;
-    private Scanner in;
     private Map<String, String> initConfig;
 
     public Game() {
-        out = new ColoredPrinter.Builder(1, false).build();
-        in = new Scanner(System.in);
         loadInitConfig();
-        this.turns = Integer.valueOf(initConfig.get("turns"));
+        this.turns = Integer.valueOf(initConfig.get("turns")) - DIFFICULTY;
     }
 
     private void loadInitConfig() {
@@ -60,12 +50,12 @@ public class Game {
                 initConfig.put(tokens[0], tokens[1]);
             }
         } catch (IOException e) {
-            System.err.println("No init config found at: " + config);
+            err.println("No init config found at: " + config);
         }
     }
 
     private void init(String playerName, String playerOS, String playerUsername) {
-        System.out.println(">> Setting up game...");
+        out.println(">> Setting up game...");
 
         int playerSkill = Integer.valueOf(initConfig.get("player_skill")) - DIFFICULTY;
         Computer playerPC = new Computer(playerOS, playerUsername, playerSkill);
@@ -88,83 +78,75 @@ public class Game {
         // for debugging automation
         DIFFICULTY = 0;
 
-        System.out.println(">> Done!");
+        out.println(">> Done!");
     }
 
     public void debug() {
 
-        out.println("=== Running Debug Mode ===\n", Attribute.BOLD, FColor.MAGENTA, BColor.BLACK);
-
-        out.println(out + "\n", Attribute.NONE, FColor.WHITE, BColor.BLACK);
+        out.println("=== Running Debug Mode ===\n");
 
         init("Patrick", "DOORS", "blyatrick");
         OS playerOS = player.getComputer().getOS();
-        System.out.println();
+        out.println();
 
         // debug stats
-        out.println("--- Player stats ---", Attribute.BOLD, FColor.CYAN, BColor.BLACK);
-        out.clear();
+        out.println("--- Player stats ---");
         out.println(player.toString());
 
-        out.print("\n");
-        out.println("--- Hacker stats ---", Attribute.BOLD, FColor.CYAN, BColor.BLACK);
-        out.clear();
+        out.println();
+        out.println("--- Hacker stats ---");
         out.println(hacker.toString());
 
-        out.print("\n");
-        out.println("--- Network map ---", Attribute.BOLD, FColor.CYAN, BColor.BLACK);
-        out.clear();
+        out.println();
+        out.println("--- Network map ---");
         out.println(network.toString());
 
         /* command simulation for debugging */
         out.println("--- Command simulation on Player OS ---");
         // list
-        out.println(playerOS.getCurrentPath() + " > dir");
+        out.println(playerOS.getCurrentPrompt() + "dir");
         execute("dir", playerOS, SUDO);
-        System.out.println();
+        out.println();
 
         // change permission
-        out.println(playerOS.getCurrentPath() + " > mode +w \"Program Data\"");
+        out.println(playerOS.getCurrentPrompt() + "mode +w \"Program Data\"");
         execute("mode +w \"Program Data\"", playerOS, SUDO);
         execute("dir", playerOS, SUDO);
-        System.out.println();
+        out.println();
 
         //change directory
-        out.println(playerOS.getCurrentPath() + " > chdir \"Program Data\"");
+        out.println(playerOS.getCurrentPrompt() + "chdir \"Program Data\"");
         execute("chdir \"Program Data\"", playerOS, SUDO);
 
         // write to file
-        out.println(playerOS.getCurrentPath() + " > echo \"This is some content\" test.txt");
+        out.println(playerOS.getCurrentPrompt() + "echo \"This is some content\" test.txt");
         execute("echo \"This is some content\" test.txt", playerOS, SUDO);
         execute("dir", playerOS, SUDO);
-        System.out.println();
+        out.println();
 
         //read from file
-        out.println(playerOS.getCurrentPath() + " > note test.txt");
+        out.println(playerOS.getCurrentPrompt() + "note test.txt");
         execute("note test.txt", playerOS, SUDO);
-        System.out.println();
+        out.println();
 
         // copy test
-        out.println(playerOS.getCurrentPath() + " > copy test.txt ./");
+        out.println(playerOS.getCurrentPrompt() + "copy test.txt ./");
         execute("copy test.txt ./", playerOS, SUDO);
         execute("dir", playerOS, SUDO);
-        System.out.println();
+        out.println();
 
         // remove file
-        out.println(playerOS.getCurrentPath() + " > del copy-test.txt");
+        out.println(playerOS.getCurrentPrompt() + "del copy-test.txt");
         execute("del copy-test.txt", playerOS, SUDO);
         execute("dir", playerOS, SUDO);
-        System.out.println();
+        out.println();
 
         // ping test
         execute("ping " + network.getRandomIP(), playerOS, SUDO);
-
-        out.clear();
     }
 
     public void run() {
-        out.println("=== Catch The Hacker ===\n", Attribute.BOLD, FColor.MAGENTA, BColor.BLACK);
-        out.clear();
+        out.println("=== Catch The Hacker ===\n");
 
         String lastInput = newGame();
         out.println("Last given input: " + lastInput);
@@ -176,16 +158,16 @@ public class Game {
         out.print("It is your first day as cybersecurity employee at CySec.\n" +
                 "You walk to your office, take a seat at your new desk and boot your company computer.\n" +
                 "The screen flashes briefly and a prompt appears...\n");
-        System.out.print("\n>> Please enter your name: ");
+        out.print("\n>> Please enter your name: ");
         String name = in.nextLine();
 
         out.println("\nAs the system processes your name a new prompt appears...");
-        System.out.print("\n>> Welcome to CySec " + name + "!\n" +
+        out.print("\n>> Welcome to CySec " + name + "!\n" +
                 ">> Please choose an Operation System: ");
         String os = in.next();
 
         out.println("\nThe system installer begins to run and it prompts you again...");
-        System.out.print("\n>> Please provide a username: ");
+        out.print("\n>> Please provide a username: ");
         String nick = in.next();
 
         init(name, os, nick);
@@ -196,11 +178,9 @@ public class Game {
                 + "You launch the terminal and start working...\n");
         // change to home directory
         playerOS.changeDirectory("~", playerOS.getFsRoot(), player.getSkill());
-        System.out.print("\n" + playerOS.getCurrentPath() + " > ");
-        String command = in.next();
+        out.print("\n" + playerOS.getCurrentPrompt());
 
-        out.clear();
-        return command;
+        return in.next();
     }
 
     /**
@@ -218,10 +198,10 @@ public class Game {
             command = activeOS.getFromCommandSet(cmdName);
             if (cmdTokens.size() == 2
                     && (cmdTokens.get(1).equals("-h") || cmdTokens.get(1).equals("help"))) {
-                System.out.println(command.getDescription());
+                out.println(command.getDescription());
             } else {
                 if (cmdTokens.size() - 1 != command.getParamNbr())
-                    System.err.println("Missing params");
+                    err.println("Missing params");
                 else {
                     switch (cmdName) {
                         case "ls":
@@ -266,7 +246,7 @@ public class Game {
                     }
                 }
             }
-        } else System.err.println(cmdName + " is not recognized as an internal or external command");
+        } else err.println(cmdName + " is not recognized as an internal or external command");
     }
 
     /**

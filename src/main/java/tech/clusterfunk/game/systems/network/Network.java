@@ -6,6 +6,7 @@ import tech.clusterfunk.util.exceptions.UnknownIPException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static tech.clusterfunk.Main.err;
 import static tech.clusterfunk.game.Game.DIFFICULTY;
 
 public class Network {
@@ -59,7 +60,7 @@ public class Network {
         if (ip.matches("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}"))
             return true;
         else {
-            System.err.println("Invalid IP address");
+            err.println("Invalid IP address");
             return false;
         }
     }

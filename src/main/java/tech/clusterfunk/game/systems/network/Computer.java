@@ -50,7 +50,7 @@ public class Computer {
         this.knownHosts = new ArrayList<>();
     }
 
-    public String getIP() {
+    String getIP() {
         return ip;
     }
 
@@ -58,8 +58,12 @@ public class Computer {
         return os;
     }
 
-    public void setKnownHosts(List<String> knownHosts) {
+    void setKnownHosts(List<String> knownHosts) {
         this.knownHosts = knownHosts;
+    }
+
+    public List<String> getKnownHosts() {
+        return knownHosts;
     }
 
     public void installNewOS(String osName, String user, int accessLevel) {
