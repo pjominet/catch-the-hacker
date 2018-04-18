@@ -6,16 +6,11 @@ import tech.clusterfunk.game.systems.network.Computer;
 import tech.clusterfunk.game.systems.network.Network;
 import tech.clusterfunk.game.systems.operatingsystem.Command;
 import tech.clusterfunk.game.systems.operatingsystem.OS;
-import tech.clusterfunk.util.CommandLoader;
+import tech.clusterfunk.util.ConfigLoader;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,25 +30,7 @@ public class Game {
     private Map<String, String> initConfig;
 
     public Game() {
-        loadInitConfig();
-    }
-
-    private void loadInitConfig() {
-        String config = CONFIG_ROOT + "init.config";
-        initConfig = new ConcurrentHashMap<>();
-        try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(
-                        CommandLoader.class.getResourceAsStream(config),
-                        StandardCharsets.UTF_8
-                )
-        )) {
-            for (String line; (line = reader.readLine()) != null; ) {
-                String[] tokens = line.split("=");
-                initConfig.put(tokens[0], tokens[1]);
-            }
-        } catch (IOException e) {
-            err.println("No init config found at: " + config);
-        }
+        initConfig = ConfigLoader.loadInitConfig();
     }
 
     /**
@@ -169,6 +146,7 @@ public class Game {
 
     /**
      * Start and setup a new game
+     *
      * @return String
      */
     private String newGame() {

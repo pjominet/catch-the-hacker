@@ -2,7 +2,7 @@ package tech.clusterfunk.game.characters;
 
 import tech.clusterfunk.game.systems.network.Computer;
 import tech.clusterfunk.game.systems.operatingsystem.Command;
-import tech.clusterfunk.util.CommandLoader;
+import tech.clusterfunk.util.ConfigLoader;
 
 import java.util.List;
 import java.util.Map;
@@ -13,7 +13,7 @@ public class Player extends Character {
     private int skill;
 
     private void initDefaultCommands() {
-        List<Command> defaults = CommandLoader.loadDefaultCommands();
+        List<Command> defaults = ConfigLoader.loadDefaultCommands();
         knownCommands = new ConcurrentHashMap<>();
         defaults.forEach(command -> knownCommands.put(command.getName(), command));
     }

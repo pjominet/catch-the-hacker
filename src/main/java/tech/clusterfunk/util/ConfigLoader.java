@@ -9,13 +9,15 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static tech.clusterfunk.Main.CONFIG_ROOT;
 import static tech.clusterfunk.Main.err;
 
-public class CommandLoader {
+public class ConfigLoader {
 
     public static List<Command> loadCommandSet(String os) {
         String config = CONFIG_ROOT + os.toLowerCase() + "_cs.config";
@@ -23,7 +25,7 @@ public class CommandLoader {
         List<Command> commandSet = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(
-                        CommandLoader.class.getResourceAsStream(config),
+                        ConfigLoader.class.getResourceAsStream(config),
                         StandardCharsets.UTF_8))
         ) {
             Pattern regex = Pattern.compile(pattern);
@@ -33,12 +35,12 @@ public class CommandLoader {
                 if (m.find()) {
                     List<String> params = new ArrayList<>();
                     if (!m.group(2).equals(""))
-                         params = new ArrayList<>(Arrays.asList(m.group(2).split(",")));
+                        params = new ArrayList<>(Arrays.asList(m.group(2).split(",")));
                     commandSet.add(new Command(m.group(1), params, m.group(3), os));
                 }
             }
         } catch (IOException e) {
-            err.println("File not found: " + config);
+            err.println("No file found at: " + config);
             System.exit(1);
         }
         return commandSet;
@@ -50,7 +52,7 @@ public class CommandLoader {
         List<Command> defaultCommands = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(
-                        CommandLoader.class.getResourceAsStream(config),
+                        ConfigLoader.class.getResourceAsStream(config),
                         StandardCharsets.UTF_8))
         ) {
             Pattern regex = Pattern.compile(pattern);
@@ -71,9 +73,48 @@ public class CommandLoader {
                 }
             }
         } catch (IOException e) {
-            err.println("File not found: " + config);
+            err.println("No file found at: " + config);
             System.exit(1);
         }
         return defaultCommands;
+    }
+
+    public static String loadGenericUsername(int userId) {
+        String config = CONFIG_ROOT + "users.list";
+        String userName = "";
+        int lineNbr = 0;
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(
+                        ConfigLoader.class.getResourceAsStream(config),
+                        StandardCharsets.UTF_8
+                )
+        )) {
+            for (String line; (line = reader.readLine()) != null; ) {
+                userName = line;
+                if (lineNbr++ == userId) break;
+            }
+        } catch (IOException e) {
+            err.println("No user list found at: " + config);
+        }
+        return userName;
+    }
+
+    public static Map<String, String> loadInitConfig() {
+        String config = CONFIG_ROOT + "init.config";
+        Map<String, String> initConfig = new ConcurrentHashMap<>();
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(
+                        ConfigLoader.class.getResourceAsStream(config),
+                        StandardCharsets.UTF_8
+                )
+        )) {
+            for (String line; (line = reader.readLine()) != null; ) {
+                String[] tokens = line.split("=");
+                initConfig.put(tokens[0], tokens[1]);
+            }
+        } catch (IOException e) {
+            err.println("No init config found at: " + config);
+        }
+        return initConfig;
     }
 }

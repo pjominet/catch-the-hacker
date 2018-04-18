@@ -3,9 +3,8 @@ package tech.clusterfunk.game.systems.operatingsystem;
 import tech.clusterfunk.game.systems.filesystem.Node;
 import tech.clusterfunk.game.systems.filesystem.NodeType;
 import tech.clusterfunk.game.systems.network.Network;
-import tech.clusterfunk.util.CommandLoader;
+import tech.clusterfunk.util.ConfigLoader;
 import tech.clusterfunk.util.FilesystemLoader;
-import tech.clusterfunk.util.exceptions.UnknownIPException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,7 +27,7 @@ public class OS {
     }
 
     private void loadCS(String osName) {
-        List<Command> set = CommandLoader.loadCommandSet(osName);
+        List<Command> set = ConfigLoader.loadCommandSet(osName);
         commandSet = new ConcurrentHashMap<>();
         set.forEach(command -> commandSet.put(command.getName(), command));
     }
