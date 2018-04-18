@@ -1,8 +1,6 @@
 package tech.clusterfunk.game.systems.network;
 
 import tech.clusterfunk.game.characters.NPC;
-import tech.clusterfunk.util.exceptions.FatalException;
-import tech.clusterfunk.util.exceptions.InvalidIPException;
 import tech.clusterfunk.util.exceptions.UnknownIPException;
 
 import java.util.*;
@@ -57,22 +55,21 @@ public class Network {
         }
     }
 
-    private boolean isValidIP(String ip) throws InvalidIPException {
+    private boolean isValidIP(String ip) {
         if (ip.matches("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}"))
             return true;
-        else throw new InvalidIPException("Invalid IP address");
+        else {
+            System.err.println("Invalid IP address");
+            return false;
+        }
     }
 
     public boolean isComputerAt(String ip) throws UnknownIPException {
-        try {
-            if (isValidIP(ip)) {
-                for (Map.Entry<String, Computer> entry : network.entrySet()) {
-                    if (ip.equals(entry.getKey()))
-                        return true;
-                }
+        if (isValidIP(ip)) {
+            for (Map.Entry<String, Computer> entry : network.entrySet()) {
+                if (ip.equals(entry.getKey()))
+                    return true;
             }
-        } catch (InvalidIPException e) {
-            System.err.println(e.getMessage());
         }
         throw new UnknownIPException("Request timed out\n\tNo reachable machine at " + ip);
     }
