@@ -343,20 +343,17 @@ public class OS {
      *
      * @param path        to the file
      * @param accessLevel to check for
-     * @return String
      */
-    public String readFromFile(String path, int accessLevel) {
-        String out = "";
+    public void readFromFile(String path, int accessLevel) {
         String fileName = getPathTerminus(path);
         Node file = findNodeBy(fileName, fsRoot);
         if (file != null) {
             if (isPermitted(file, 'r', accessLevel)) {
                 if (file.getType() == NodeType.FILE)
-                    out = file.getContent();
+                    System.out.print(file.getContent());
                 else System.err.println(fileName + " is no file");
             }
         } else System.err.println(fileName + " does not exist");
-        return out;
     }
 
     /**
@@ -439,5 +436,9 @@ public class OS {
                 }
             }
         } else System.err.println(sourcePath + " does not exist");
+    }
+
+    public void networkMap(Network network) {
+        System.out.print(network.toString());
     }
 }

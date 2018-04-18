@@ -249,7 +249,7 @@ public class Game {
                         case "vim":
                         case "note":
                         case "nano":
-                            System.out.println(activeOS.readFromFile(cmdTokens.get(1), accessLevel));
+                            activeOS.readFromFile(cmdTokens.get(1), accessLevel);
                             break;
                         case "echo":
                             activeOS.writeToFile(cmdTokens.get(1), cmdTokens.get(2), accessLevel);
@@ -258,6 +258,10 @@ public class Game {
                         case "mode":
                         case "perm":
                             activeOS.changeMode(cmdTokens.get(1), cmdTokens.get(2), activeOS.getFsRoot(), accessLevel);
+                            break;
+                        case "nmap":
+                        case "netmap":
+                            activeOS.networkMap(network);
                             break;
                     }
                 }
