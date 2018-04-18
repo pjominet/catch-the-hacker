@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 import static tech.clusterfunk.Main.*;
 
 public class Game {
-    public static int DIFFICULTY = 0;
+    public static int DIFFICULTY;
     public static int TURNS;
 
     private Player player;
@@ -33,7 +33,6 @@ public class Game {
 
     public Game() {
         loadInitConfig();
-        TURNS = Integer.valueOf(initConfig.get("turns")) - DIFFICULTY;
     }
 
     private void loadInitConfig() {
@@ -72,11 +71,12 @@ public class Game {
         network.addComputer(playerPC);
 
         /*
-        System.out.print("\n>> Please select game difficulty (0=easy, 1=medium, 2=hard): ");
+        out.print(">> Please select game difficulty (0=easy, 1=medium, 2=hard): ");
         DIFFICULTY = in.nextInt();
         */
         // for debugging automation
         DIFFICULTY = 0;
+        TURNS = Integer.valueOf(initConfig.get("turns")) - DIFFICULTY;
 
         out.println(">> Done!");
     }
