@@ -22,6 +22,7 @@ public class Network {
                 // wait to be sure next rnd seed is different
                 Thread.sleep(7);
             }
+            createMeshTopology();
         } catch (InterruptedException e) {
             e.printStackTrace();
             System.exit(1);
@@ -40,7 +41,8 @@ public class Network {
     public String getRandomIP() {
         Random generator = new Random();
         Object[] values = network.values().toArray();
-        return (String) values[generator.nextInt(values.length)];
+        Computer computer = (Computer) values[generator.nextInt(values.length)];
+        return computer.getIP();
     }
 
     private void createMeshTopology() {

@@ -295,7 +295,7 @@ public class OS {
                     System.out.println("Ping statistics for " + ip + ":");
                     System.out.println("\tPackets: Sent = 4, Received = 4, Lost = 0 (0% loss)");
                 }
-            } catch (InvalidIPException | UnknownIPException e) {
+            } catch (UnknownIPException e) {
                 System.err.println(e.getMessage());
             } catch (InterruptedException e) {
                 e.printStackTrace();
