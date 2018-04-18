@@ -23,7 +23,7 @@ import static tech.clusterfunk.Main.*;
 
 public class Game {
     public static int DIFFICULTY = 0;
-    private int turns;
+    public static int TURNS;
 
     private Player player;
     private Hacker hacker;
@@ -33,7 +33,7 @@ public class Game {
 
     public Game() {
         loadInitConfig();
-        this.turns = Integer.valueOf(initConfig.get("turns")) - DIFFICULTY;
+        TURNS = Integer.valueOf(initConfig.get("turns")) - DIFFICULTY;
     }
 
     private void loadInitConfig() {
