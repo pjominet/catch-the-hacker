@@ -5,7 +5,6 @@ import tech.clusterfunk.game.systems.filesystem.NodeType;
 import tech.clusterfunk.game.systems.network.Network;
 import tech.clusterfunk.util.CommandLoader;
 import tech.clusterfunk.util.FilesystemLoader;
-import tech.clusterfunk.util.exceptions.InvalidIPException;
 import tech.clusterfunk.util.exceptions.UnknownIPException;
 
 import java.util.ArrayList;
