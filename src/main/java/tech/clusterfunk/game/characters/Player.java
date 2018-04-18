@@ -3,7 +3,6 @@ package tech.clusterfunk.game.characters;
 import tech.clusterfunk.game.systems.network.Computer;
 import tech.clusterfunk.game.systems.operatingsystem.Command;
 import tech.clusterfunk.util.CommandLoader;
-import tech.clusterfunk.util.exceptions.UnrecognizedCommandException;
 
 import java.util.List;
 import java.util.Map;
@@ -50,12 +49,6 @@ public class Player extends Character {
                 availableCommands.put(entry.getKey(), entry.getValue());
         }
         return availableCommands;
-    }
-
-    public Command useCommand(String cmdName) throws UnrecognizedCommandException {
-        Command command = getAvailableCommands().get(cmdName);
-        if (command != null) return command;
-        else throw new UnrecognizedCommandException(cmdName + " is not recognized as an internal command.");
     }
 
     public void learnCommand(Command cmd) {

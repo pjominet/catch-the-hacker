@@ -21,6 +21,9 @@ import java.util.regex.Pattern;
 
 import static tech.clusterfunk.Main.*;
 
+/**
+ * Manage main game flow and all user interaction
+ */
 public class Game {
     public static int DIFFICULTY;
     public static int TURNS;
@@ -53,6 +56,13 @@ public class Game {
         }
     }
 
+    /**
+     * Initializes all default game values
+     *
+     * @param playerName     to be chosen by the user
+     * @param playerOS       to be chosen by the user
+     * @param playerUsername to be chosen by the user
+     */
     private void init(String playerName, String playerOS, String playerUsername) {
         out.println(">> Setting up game...");
 
@@ -81,6 +91,9 @@ public class Game {
         out.println(">> Done!");
     }
 
+    /**
+     * Run a debug mode for testing purposes
+     */
     public void debug() {
 
         out.println("=== Running Debug Mode ===\n");
@@ -154,6 +167,10 @@ public class Game {
         in.close();
     }
 
+    /**
+     * Start and setup a new game
+     * @return String
+     */
     private String newGame() {
         out.print("It is your first day as cybersecurity employee at CySec.\n" +
                 "You walk to your office, take a seat at your new desk and boot your company computer.\n" +

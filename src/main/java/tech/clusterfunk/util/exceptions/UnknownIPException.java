@@ -1,5 +1,8 @@
 package tech.clusterfunk.util.exceptions;
 
+/**
+ * Exception when querying unknown ip address in the network
+ */
 public class UnknownIPException extends Exception {
 
     private String message;
