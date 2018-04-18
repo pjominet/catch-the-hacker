@@ -294,9 +294,7 @@ public class OS {
                     out.println();
                     out.println("Ping statistics for " + ip + ":");
                     out.println("\tPackets: Sent = 4, Received = 4, Lost = 0 (0% loss)");
-                }
-            } catch (UnknownIPException e) {
-                err.println(e.getMessage());
+                } else err.println("Request timed out\n\tNo reachable machine at " + ip);
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 System.exit(1);

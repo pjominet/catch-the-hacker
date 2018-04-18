@@ -1,7 +1,6 @@
 package tech.clusterfunk.game.systems.network;
 
 import tech.clusterfunk.game.characters.NPC;
-import tech.clusterfunk.util.exceptions.UnknownIPException;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -32,9 +31,8 @@ public class Network {
         network.put(computer.getIP(), computer);
     }
 
-    public Computer getComputerByIP(String ip) throws UnknownIPException {
-        if (isComputerAt(ip)) return network.get(ip);
-        else return null;
+    public Computer getComputerByIP(String ip) {
+        return network.get(ip);
     }
 
     public String getRandomIP() {
@@ -65,14 +63,14 @@ public class Network {
         }
     }
 
-    public boolean isComputerAt(String ip) throws UnknownIPException {
+    public boolean isComputerAt(String ip) {
         if (isValidIP(ip)) {
             for (Map.Entry<String, Computer> entry : network.entrySet()) {
                 if (ip.equals(entry.getKey()))
                     return true;
             }
         }
-        throw new UnknownIPException("Request timed out\n\tNo reachable machine at " + ip);
+        return false;
     }
 
     @Override
