@@ -143,7 +143,7 @@ public class Game {
         out.println("=== Catch The Hacker ===\n");
 
         String lastInput = newGame();
-        out.println("Last given input: " + lastInput);
+        execute(lastInput, player.getComputer().getOS(), SUDO);
 
         in.close();
     }
@@ -161,9 +161,26 @@ public class Game {
         String name = in.nextLine();
 
         out.println("\nAs the system processes your name a new prompt appears...");
-        out.print("\n>> Welcome to CySec " + name + "!\n" +
-                ">> Please choose an Operation System: ");
-        String os = in.next();
+        out.println("\n>> Welcome to CySec " + name + "!");
+        String os = "";
+        ask:
+        while (true) {
+            out.print(">> Please choose an Operation System\n\t(1)DOORS (2)LOONIX (3)OSY: ");
+            switch (in.nextInt()) {
+                case 1:
+                    os = "DOORS";
+                    break;
+                case 2:
+                    os = "LOONIX";
+                    break;
+                case 3:
+                    os = "OYS";
+                    break;
+                default:
+                    err.println(">> Illegal Argument");
+                    break ask;
+            }
+        }
 
         out.println("\nThe system installer begins to run and it prompts you again...");
         out.print("\n>> Please provide a username: ");
