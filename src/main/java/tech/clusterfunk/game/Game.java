@@ -71,7 +71,7 @@ public class Game {
     /**
      * Run a debug mode for testing purposes
      */
-    public void debug() {
+    public void debug() throws InterruptedException {
 
         out.println("=== Running Debug Mode ===\n");
 
@@ -139,7 +139,7 @@ public class Game {
         execute("ping " + network.getRandomIP(), playerOS, SUDO);
     }
 
-    public void run() {
+    public void run() throws InterruptedException {
         out.println("=== Catch The Hacker ===\n");
 
         String lastInput = newGame();
@@ -153,35 +153,41 @@ public class Game {
      *
      * @return String
      */
-    private String newGame() {
+    private String newGame() throws InterruptedException {
         out.print("It is your first day as cybersecurity employee at CySec.\n" +
                 "You walk to your office, take a seat at your new desk and boot your company computer.\n" +
                 "The screen flashes briefly and a prompt appears...\n");
         out.print("\n>> Please enter your name: ");
         String name = in.nextLine();
 
+        Thread.sleep(777);
         out.println("\nAs the system processes your name a new prompt appears...");
         out.println("\n>> Welcome to CySec " + name + "!");
         String os = "";
-        ask:
-        while (true) {
+        boolean ask = true;
+        while (ask) {
             out.print(">> Please choose an Operation System\n\t(1)DOORS (2)LOONIX (3)OSY: ");
             switch (in.nextInt()) {
                 case 1:
                     os = "DOORS";
+                    ask = false;
                     break;
                 case 2:
                     os = "LOONIX";
+                    ask = false;
                     break;
                 case 3:
                     os = "OYS";
+                    ask = false;
                     break;
                 default:
                     err.println(">> Illegal Argument");
-                    break ask;
+                    Thread.sleep(777);
+                    break;
             }
         }
 
+        Thread.sleep(777);
         out.println("\nThe system installer begins to run and it prompts you again...");
         out.print("\n>> Please provide a username: ");
         String nick = in.next();
@@ -189,6 +195,7 @@ public class Game {
         init(name, os, nick);
         OS playerOS = player.getComputer().getOS();
 
+        Thread.sleep(777);
         out.print("\nAs installer finishes, you are being greeted by the welcome screen of " +
                 playerOS.getName() + ".\n"
                 + "You launch the terminal and start working...\n");
@@ -206,7 +213,7 @@ public class Game {
      * @param activeOS    from current computer
      * @param accessLevel to check for
      */
-    private void execute(String commandLine, OS activeOS, int accessLevel) {
+    private void execute(String commandLine, OS activeOS, int accessLevel) throws InterruptedException {
         List<String> cmdTokens = commandLineSplitter(commandLine);
         String cmdName = cmdTokens.get(0);
         Command command;

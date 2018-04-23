@@ -278,26 +278,21 @@ public class OS {
      * @param network in question
      * @param ip      to ping
      */
-    public void ping(Network network, String ip) {
+    public void ping(Network network, String ip) throws InterruptedException {
         if (ip.equals("127.0.0.1"))
             err.println("Pinging your own system is somewhat pointless, don't you think?");
         else {
-            try {
-                if (network.isComputerAt(ip)) {
-                    out.println("Pinging " + ip + " with 32 bytes of data:");
-                    for (int i = 0; i < 4; i++) {
-                        out.println("\tReply from " + ip + ": bytes=32 time<1ms TTL=64");
-                        // wait for show effect
-                        Thread.sleep(777);
-                    }
-                    out.println();
-                    out.println("Ping statistics for " + ip + ":");
-                    out.println("\tPackets: Sent = 4, Received = 4, Lost = 0 (0% loss)");
-                } else err.println("Request timed out\n\tNo reachable machine at " + ip);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                System.exit(1);
-            }
+            if (network.isComputerAt(ip)) {
+                out.println("Pinging " + ip + " with 32 bytes of data:");
+                for (int i = 0; i < 4; i++) {
+                    out.println("\tReply from " + ip + ": bytes=32 time<1ms TTL=64");
+                    // wait for show effect
+                    Thread.sleep(777);
+                }
+                out.println();
+                out.println("Ping statistics for " + ip + ":");
+                out.println("\tPackets: Sent = 4, Received = 4, Lost = 0 (0% loss)");
+            } else err.println("Request timed out\n\tNo reachable machine at " + ip);
         }
     }
 

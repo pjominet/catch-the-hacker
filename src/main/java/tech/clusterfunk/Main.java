@@ -17,7 +17,12 @@ public class Main {
 
     public static void main(String[] args) {
         Game game = new Game();
-        game.debug();
-        //game.run();
+        try {
+            game.debug();
+            //game.run();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
     }
 }
