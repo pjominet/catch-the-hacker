@@ -38,15 +38,15 @@ public class Command {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append(name);
-        if (params != null) {
+        String paramValues = "";
+        if (params != null && !params.isEmpty()) {
+            StringBuilder builder = new StringBuilder();
             for (String param : params) {
                 builder.append(" <").append(param).append(">");
             }
+            paramValues = builder.toString();
         }
-        builder.append(": ").append(description);
-        return builder.toString();
+        return String.format("\t%s%s\n\t%s", name, paramValues, description);
     }
 
     @Override

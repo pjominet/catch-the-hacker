@@ -98,6 +98,10 @@ public class Game {
         execute("dir", playerOS, SUDO);
         out.println();
 
+        // help
+        out.println(playerOS.getCurrentPrompt() + "mode -h");
+        execute("mode -h", playerOS, SUDO);
+        out.println();
         // change permission
         out.println(playerOS.getCurrentPrompt() + "mode +w \"Program Data\"");
         execute("mode +w \"Program Data\"", playerOS, SUDO);
@@ -193,7 +197,7 @@ public class Game {
             command = activeOS.getFromCommandSet(cmdName);
             if (cmdTokens.size() == 2
                     && (cmdTokens.get(1).equals("-h") || cmdTokens.get(1).equals("help"))) {
-                out.println(command.getDescription());
+                out.println(command.toString());
             } else {
                 if (cmdTokens.size() - 1 != command.getParamNbr())
                     err.println("Missing params");
