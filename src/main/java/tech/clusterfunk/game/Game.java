@@ -266,6 +266,11 @@ public class Game {
                         case "netmap":
                             activeOS.networkMap(network);
                             break;
+                        case "help":
+                            out.print("Help coming soon");
+                            break;
+                        default:
+                            break;
                     }
                 }
             }
