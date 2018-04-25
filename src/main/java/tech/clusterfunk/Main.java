@@ -8,6 +8,7 @@ import java.util.Scanner;
 public class Main {
 
     public static final String CONFIG_ROOT = "/configs/";
+    public static final String ASSET_ROOT = "/assets/";
     public static final int MAX_ALLOWED_ACCESSLEVEL = 5;
     public static final int SUDO = MAX_ALLOWED_ACCESSLEVEL + 1;
 
