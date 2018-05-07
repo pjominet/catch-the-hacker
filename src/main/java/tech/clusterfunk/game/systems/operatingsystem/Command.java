@@ -24,10 +24,6 @@ public class Command {
         return params;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
     public String getOS() {
         return os;
     }
@@ -55,6 +51,12 @@ public class Command {
         if (!(o instanceof Command)) return false;
         Command command = (Command) o;
         return Objects.equals(this.getName(), command.getName()) &&
-                Objects.equals(this.getOS(), command.getOS());
+                Objects.equals(this.getOS(), command.getOS()) &&
+                this.getParamNbr() == command.getParamNbr();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, getParamNbr(), os);
     }
 }
