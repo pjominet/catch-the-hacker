@@ -22,10 +22,20 @@ public class OS {
     private String user;
     private int accessLevel;
 
+    /**
+     * Initialize a filesystem from definition
+     *
+     * @param osName the filesystem is for
+     */
     private void loadFS(String osName) {
         fsRoot = FilesystemLoader.parseFileSystem(osName);
     }
 
+    /**
+     * Initialize a commandset from definition
+     *
+     * @param osName the commandset is for
+     */
     private void loadCS(String osName) {
         List<Command> set = ConfigLoader.loadCommandSet(osName);
         commandSet = new ConcurrentHashMap<>();

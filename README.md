@@ -14,7 +14,7 @@ You play as a cybersecurity guy, chasing an evil hacker through a network of dif
 
 `mvn install` to initialize all dependencies
 
-## Build a jar
+## Build jar
 
 `mvn clean package` to build an executable jar
 
